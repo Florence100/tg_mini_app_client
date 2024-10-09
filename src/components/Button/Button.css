@@ -1,0 +1,12 @@
+.button {
+    padding: 0.25rem;
+
+    &.add-btn {
+        width: 100%;
+        border-radius: 0.5rem;
+        color: var(--tg-theme-button-text-color);
+        background-color: var(--primary-color);
+        text-transform: uppercase;
+        padding: 0.5rem 0.25rem;
+    }
+}
