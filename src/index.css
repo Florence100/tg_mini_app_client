@@ -77,5 +77,6 @@ body {
 
 /* ---------------- Variables ---------------- */
 :root {
-  --primary-color: orange;
+  --primary-color: #f8a917;
+  --accent-color: #31b545;
 }

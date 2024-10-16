@@ -1,12 +1,23 @@
 .button {
     padding: 0.25rem;
+    border-radius: 0.5rem;
+    color: var(--tg-theme-button-text-color);
+    text-transform: uppercase;
+    padding: 0.5rem;
 
     &.add-btn {
         width: 100%;
-        border-radius: 0.5rem;
-        color: var(--tg-theme-button-text-color);
         background-color: var(--primary-color);
-        text-transform: uppercase;
         padding: 0.5rem 0.25rem;
+    }
+
+    &.decr-btn {
+        width: 50%;
+        background-color: var(--tg-theme-destructive-text-color);
+    }
+
+    &.incr-btn {
+        width: 50%;
+        background-color: var(--primary-color);
     }
 }
