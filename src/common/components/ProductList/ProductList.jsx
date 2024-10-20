@@ -1,16 +1,14 @@
-import './ProductList.css';
-import ProductItem from '../ProductItem/ProductItem';
 import { useSelector, useDispatch } from 'react-redux';
-import { add, remove, increment, decrement } from '../../features/cart/cartSlice';
 import { useEffect } from 'react';
 import useTelegram from '../../hooks/useTelegram';
-import products from '../../data/data';
+import ProductItem from '../ProductItem/ProductItem';
+import products from '../../../data/data';
+import './ProductList.css';
 
 function ProductList() {
     const { tg } = useTelegram();
     const cart = useSelector(state => state.cart.entities);
     const isEmpty = Object.keys(cart).length > 0 ? false : true;
-    console.log(isEmpty)
 
     useEffect(() => {
         if (!isEmpty) {
@@ -25,34 +23,12 @@ function ProductList() {
         }
     }, [cart])
 
-    const dispatch = useDispatch();
-
-    function onAdd(product) {
-        dispatch(add(product));
-    }
-
-    function onIncrement(product) {
-        dispatch(increment(product));
-    }
-
-    function onDecrement(product) {
-        dispatch(decrement(product));
-    }
-
-    function onRemove(product) {
-        dispatch(remove(product));
-    }
-
     return (
-        <div className="list">
+        <div className='list'>
             {
                 products.map((item) => (
                     <ProductItem key={item.id}
                         product={item}
-                        onAdd={onAdd}
-                        onRemove={onRemove}
-                        onIncrement={onIncrement}
-                        onDecrement={onDecrement}
                         className={'item'}
                     />
                 ))

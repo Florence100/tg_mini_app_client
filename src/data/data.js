@@ -1,6 +1,6 @@
 const products = [
     {
-        id: 1, 
+        id: 1,
         name: 'Торт',
         price: '5.99',
         description: 'Солнечный снаружи и яркий по вкусу внутри: многослойный воздушный торт с бананом и клубникой',
@@ -10,8 +10,8 @@ const products = [
             carbohydrates: '47',
             calorie: '387'
         },
-        weight: '100',
-        img: './img/Cake_148.png'
+        weight: '100 г.',
+        img: 'img/Cake_148.png'
     },
     {
         id: 2,
@@ -24,7 +24,7 @@ const products = [
             carbohydrates: '48',
             calorie: '760'
         },
-        weight: '340',
+        weight: '340 г.',
         img: './img/Burger_148.png'
     },
     {
@@ -38,7 +38,7 @@ const products = [
             carbohydrates: '15',
             calorie: '155'
         },
-        weight: '100',
+        weight: '100 г.',
         img: './img/Fries_148.png'
     },
     {
@@ -52,7 +52,7 @@ const products = [
             carbohydrates: '33.8',
             calorie: '216'
         },
-        weight: '100',
+        weight: '100 г.',
         img: './img/Hotdog_148.png'
     },
     {
@@ -66,7 +66,7 @@ const products = [
             carbohydrates: '32.7',
             calorie: '517'
         },
-        weight: '230',
+        weight: '230 г.',
         img: './img/Tako_148.png'
     },
     {
@@ -80,7 +80,7 @@ const products = [
             carbohydrates: '48',
             calorie: '1038'
         },
-        weight: '448',
+        weight: '448 г.',
         img: './img/Pizza_148.png'
     },
     {
@@ -94,7 +94,7 @@ const products = [
             carbohydrates: '47',
             calorie: '387'
         },
-        weight: '90',
+        weight: '90 г.',
         img: './img/Donut_148.png'
     },
     {
@@ -108,7 +108,7 @@ const products = [
             carbohydrates: '62.7',
             calorie: '407'
         },
-        weight: '100',
+        weight: '100 г.',
         img: './img/Popcorn_148.png'
     },
     {
@@ -122,7 +122,7 @@ const products = [
             carbohydrates: '27',
             calorie: '105'
         },
-        weight: '250',
+        weight: '250 мл.',
         img: './img/Coke_148.png'
     },
     {
@@ -136,7 +136,7 @@ const products = [
             carbohydrates: '30',
             calorie: '169'
         },
-        weight: '100',
+        weight: '100 г.',
         img: './img/Icecream_148.png'
     },
     {
@@ -150,7 +150,7 @@ const products = [
             carbohydrates: '23',
             calorie: '195'
         },
-        weight: '40',
+        weight: '40 г.',
         img: './img/Cookie_148.png'
     },
     {
@@ -164,7 +164,7 @@ const products = [
             carbohydrates: '47',
             calorie: '387'
         },
-        weight: '90',
+        weight: '90 г.',
         img: './img/Flan_148.png'
     }
 ]

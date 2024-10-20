@@ -13,11 +13,13 @@
 
     &.decr-btn {
         width: 50%;
+        max-width: 2.5rem;
         background-color: var(--tg-theme-destructive-text-color);
     }
 
     &.incr-btn {
         width: 50%;
+        max-width: 2.5rem;
         background-color: var(--primary-color);
     }
 }

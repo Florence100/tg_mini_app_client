@@ -1,0 +1,44 @@
+.product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    position: relative;
+
+    .img {
+        width: 30%;
+        aspect-ratio: 1 / 1;
+        align-self: center;
+    }
+
+    .price {
+        font-weight: bold;
+    }
+
+    .info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info>div {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .control-box {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: bold;
+
+        .count {
+            display: flex;
+            gap: 0.5rem;
+        }
+    }
+}

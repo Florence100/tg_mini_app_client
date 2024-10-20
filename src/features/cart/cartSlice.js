@@ -27,7 +27,6 @@ export const cartSlice = createSlice({
         remove: (state, action) => {
             const productItem = action.payload;
             delete state.entities[productItem.id];
-            // state.entities.delete(productItem.id);
         },
         decrement: (state, action) => {
             const productItem = action.payload;
