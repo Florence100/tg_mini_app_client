@@ -2,7 +2,7 @@ const products = [
     {
         id: 1,
         name: 'Торт',
-        price: '5.99',
+        price: 178.30,
         description: 'Солнечный снаружи и яркий по вкусу внутри: многослойный воздушный торт с бананом и клубникой',
         nutritional: {
             proteins: '5.4',
@@ -16,7 +16,7 @@ const products = [
     {
         id: 2,
         name: 'Бургер',
-        price: '8.50',
+        price: 250.00,
         description: 'Большой рубленый бифштекс из 100 % говядины, два слайса сочного помидора, свежие салат и лук, три ломтика сыра Эмменталь и пикантный соус Гриль – всё на румяной булочке с кунжутом.',
         nutritional: {
             proteins: '35',
@@ -30,7 +30,7 @@ const products = [
     {
         id: 3,
         name: 'Картофель фри',
-        price: '4.20',
+        price: 125.00,
         description: 'Хрустящие соломки отборного картофеля, жаренные во фритюре. ',
         nutritional: {
             proteins: '1.5',
@@ -44,7 +44,7 @@ const products = [
     {
         id: 4,
         name: 'Хотдог',
-        price: '3.49',
+        price: 103.90,
         description: 'Сосиска в пшеничной булочке, приправленная кетчупом, майонезом и горчицей',
         nutritional: {
             proteins: '18.8',
@@ -58,7 +58,7 @@ const products = [
     {
         id: 5,
         name: 'Тако',
-        price: '3.99',
+        price: 104.50,
         description: 'Сочный цыпленок, приготовленный по технологии су вид, в сочетании с быстро обжаренными сладкими перцами, спелыми томатами, соусом из сметаны и острым перцем халапеньо',
         nutritional: {
             proteins: '23.8',
@@ -72,7 +72,7 @@ const products = [
     {
         id: 6,
         name: 'Пицца',
-        price: '7.99',
+        price: 237.80,
         description: 'Цыплёнок, бекон, соус барбекю, красный лук, моцарелла, фирменный томатный соус',
         nutritional: {
             proteins: '52',
@@ -86,7 +86,7 @@ const products = [
     {
         id: 7,
         name: 'Пончик',
-        price: '2.49',
+        price: 74.00,
         description: 'Нежная выпечка с приятным ароматом ванили.',
         nutritional: {
             proteins: '5.4',
@@ -100,7 +100,7 @@ const products = [
     {
         id: 8,
         name: 'Попкорн',
-        price: '5.00',
+        price: 150.00,
         description: 'Любимое лакомство для детей и взрослых.',
         nutritional: {
             proteins: '7.3',
@@ -114,7 +114,7 @@ const products = [
     {
         id: 9,
         name: 'Кола',
-        price: '2.80',
+        price: 83.80,
         description: 'Прохладительный газированный напиток Coca-Cola. ',
         nutritional: {
             proteins: '0',
@@ -128,7 +128,7 @@ const products = [
     {
         id: 10,
         name: 'Мороженое',
-        price: '3.50',
+        price: 104.00,
         description: 'Нежное ванильное мороженое, завернутое в хрустящий вафельный рожок.',
         nutritional: {
             proteins: '3.7',
@@ -142,7 +142,7 @@ const products = [
     {
         id: 11,
         name: 'Кукис',
-        price: '2.00',
+        price: 60.00,
         description: 'Овсяное печенье с какао и кусочками настоящего темного шоколада. ',
         nutritional: {
             proteins: '2.2',
@@ -156,7 +156,7 @@ const products = [
     {
         id: 12,
         name: 'Флан',
-        price: '7.99',
+        price: 150.20,
         description: 'Ароматный и нежный десерт с хрустящей карамельной корочкой',
         nutritional: {
             proteins: '5.4',

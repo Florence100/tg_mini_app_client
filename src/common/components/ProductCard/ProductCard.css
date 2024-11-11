@@ -1,14 +1,20 @@
 .product-card {
+    padding: var(--big-padding);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: var(--medium-gap);
     position: relative;
 
     .img {
         width: 30%;
         aspect-ratio: 1 / 1;
         align-self: center;
+        margin-bottom: 1rem;
+    }
+
+    .name {
+        font-weight: bold;
     }
 
     .price {
@@ -19,7 +25,7 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: var(--small-gap);
         margin-bottom: 2rem;
     }
 
@@ -38,7 +44,7 @@
 
         .count {
             display: flex;
-            gap: 0.5rem;
+            gap: var(--small-gap);
         }
     }
 }

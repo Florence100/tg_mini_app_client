@@ -5,6 +5,7 @@ import { add, remove, increment, decrement } from '../../../features/cart/cartSl
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import products from '../../../data/data';
 import useTelegram from '../../hooks/useTelegram';
+import useCartStatus from 'common/hooks/useCartStatus';
 import Button from '../Button/Button';
 import ProductCounter from '../ProductCounter/ProductCounter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,29 +20,41 @@ function loader({ params }) {
 
 function ProductCard() {
     const { tg } = useTelegram();
+    const { isEmpty } = useCartStatus();
     const navigate = useNavigate();
-    const cart = useSelector(state => state.cart.entities);
-    const isEmpty = Object.keys(cart).length > 0 ? false : true;
+    // const cart = useSelector(state => state.cart.entities);
+    // const isEmpty = Object.keys(cart).length > 0 ? false : true;
+
+    const onMainBtnClickHandler = () => {
+        navigate('/cart');
+        tg.MainButton.offClick(onMainBtnClickHandler);
+    }
 
     useEffect(() => {
         if (!isEmpty) {
-            tg.MainButton.show();
-            tg.MainButton.setParams({
-                text: 'Оформить заказ',
-                color: '#31b545',
-                hasShineEffect: true
-            })
+            tg.MainButton
+                .setParams({
+                    color: '#31b545',
+                    text: 'Перейти в корзину',
+                    hasShineEffect: true
+                })
+                .show();
+            tg.MainButton.onClick(onMainBtnClickHandler);
         } else {
             tg.MainButton.hide();
+            tg.MainButton.offClick(onMainBtnClickHandler);
         }
-    }, [cart])
+        return () => {
+            tg.MainButton.hide();
+        };
+    }, [isEmpty])
 
     useEffect(() => {
         tg.BackButton.show();
         tg.BackButton.onClick(() => {
             navigate(-1);
-            tg.BackButton.hide();
         })
+        tg.MainButton.setText('Перейти в корзину');
     })
 
     const productId = useLoaderData();
@@ -100,7 +113,7 @@ function ProductCard() {
                 </div>
             </div>
             {count === 0 
-                ? <Button className='add-btn add-btn-card' onClick={onAddHandler}>Добавить</Button>
+                ? <Button className='add-btn' onClick={onAddHandler}>Добавить</Button>
                 : <div className='control-box'>
                     <div>Добавлено в корзину:</div>
                     <div className='count'>

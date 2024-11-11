@@ -1,0 +1,90 @@
+.cart {
+    background-color: var(--tg-theme-secondary-bg-color);
+    width: 100%;
+    min-height: 100vh;
+
+    .cart-header {
+        background-color: var(--tg-theme-bg-color);
+        display: flex;
+        justify-content: space-between;
+        padding: var(--big-padding);
+
+        .header-order {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .header-edit {
+            color: var(--accent-color);
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+            -webkit-tap-highlight-color: transparent;
+        }
+    }
+
+    .order {
+        background-color: var(--tg-theme-bg-color);
+        border-bottom: 1px solid var(--tg-theme-section-separator-color);
+        padding: 0 var(--big-padding) var(--medium-padding) var(--big-padding);
+        display: flex;
+        flex-direction: column;
+        gap: var(--medium-gap);
+
+        .order-item {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            gap: var(--big-gap);
+            align-items: center;
+
+            .product-img {
+                width: auto;
+                max-height: 2.5rem;
+            }
+
+            .container {
+                display: flex;
+                gap: var(--small-gap);
+                flex-grow: 1;
+                flex-wrap: wrap;
+            }
+
+            .name {
+                font-weight: bold;
+            }
+
+            .count {
+                color: var(--primary-color);
+                font-weight: bold;
+            }
+
+            .price {
+                flex-wrap: wrap;
+            }
+        }
+    }
+
+    .text-field-wrap {
+        margin-top: var(--medium-padding);
+
+        .text-field {
+            width: 100%;
+            overflow: hidden;
+            padding: var(--medium-padding) var(--big-padding);
+            background-color: var(--tg-theme-bg-color);
+            border-bottom: 1px solid var(--tg-theme-section-separator-color);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+
+            &::placeholder {
+                color: var(--tg-theme-hint-color);
+                font-size: 1rem;
+            }
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}

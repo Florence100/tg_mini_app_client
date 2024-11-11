@@ -37,9 +37,8 @@ function ProductItem({ product, className }) {
                     <img className='product-img' src={product.img} alt='Фото товара'></img>
                 </Link>
                 <div className='name'>{product.name}</div>
-                <div className='price'>{product.price} руб.</div>
+                <div className='price'>{product.price.toFixed(2)} руб.</div>
                 {count > 0 && <ProductCounter count={count} className={'item-counter'}/>}
-                {/* {count > 0 && <div className='count'>{ count }</div>} */}
             </div>
 
             {count === 0 

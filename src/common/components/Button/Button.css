@@ -4,6 +4,12 @@
     color: var(--tg-theme-button-text-color);
     text-transform: uppercase;
     padding: 0.5rem;
+    transition: scale 0.15s ease;
+    user-select: none;
+
+    &:active {
+        scale: 0.9;
+    }
 
     &.add-btn {
         width: 100%;
@@ -12,14 +18,14 @@
     }
 
     &.decr-btn {
-        width: 50%;
         max-width: 2.5rem;
+        width: 100%;
         background-color: var(--tg-theme-destructive-text-color);
     }
 
     &.incr-btn {
-        width: 50%;
         max-width: 2.5rem;
+        width: 100%;
         background-color: var(--primary-color);
     }
 }

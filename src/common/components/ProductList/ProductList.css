@@ -1,7 +1,8 @@
 .list {
+    padding: var(--big-padding);
     width: 100%;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: var(--big-gap);
 }

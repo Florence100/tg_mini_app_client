@@ -10,6 +10,11 @@
 
     .product-img {
         width: 100%;
+        transition: scale 0.15s ease;
+
+        &:active {
+            scale: 0.9;
+        }
     }
 
     .name {
@@ -26,7 +31,7 @@
     .btns-box {
         width: 100%;
         display: flex;
-        gap: 0.5rem;
-        justify-content: space-between;
+        gap: var(--medium-gap);
+        justify-content: center;
     }
 }

@@ -1,27 +1,44 @@
-import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useTelegram from '../../hooks/useTelegram';
+import useCartStatus from 'common/hooks/useCartStatus';
 import ProductItem from '../ProductItem/ProductItem';
 import products from '../../../data/data';
 import './ProductList.css';
 
+
 function ProductList() {
     const { tg } = useTelegram();
-    const cart = useSelector(state => state.cart.entities);
-    const isEmpty = Object.keys(cart).length > 0 ? false : true;
+    const { isEmpty } = useCartStatus();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!isEmpty) {
-            tg.MainButton.show();
-            tg.MainButton.setParams({
-                text: 'Оформить заказ',
-                color: '#31b545',
-                hasShineEffect: true
-            })
+            tg.MainButton
+                .setParams({
+                    color: '#31b545',
+                    text: 'Перейти в корзину',
+                    hasShineEffect: true
+                })
+                .show();
+            tg.MainButton.onClick(onMainBtnClickHandler);
         } else {
             tg.MainButton.hide();
+            tg.MainButton.offClick(onMainBtnClickHandler);
         }
-    }, [cart])
+        return () => {
+            tg.MainButton.hide();
+        };
+    }, [isEmpty])
+
+    useEffect(() => {
+        tg.BackButton.hide();
+    })
+
+    const onMainBtnClickHandler = () => {
+        navigate('/cart');
+        tg.MainButton.offClick(onMainBtnClickHandler);
+    }
 
     return (
         <div className='list'>
@@ -37,4 +54,4 @@ function ProductList() {
     )
 }
 
-export default ProductList;
+export { ProductList };
