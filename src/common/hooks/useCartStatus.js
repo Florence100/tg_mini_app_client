@@ -14,7 +14,7 @@ const getTotalAmount = (productsList) => {
         return currentSum + ( currentNumber.count * currentNumber.price );
     }, 0)
     
-    return totalAmount.toFixed(2);
+    return +totalAmount.toFixed(2);
 }
 
 export default function useCartStatus() {

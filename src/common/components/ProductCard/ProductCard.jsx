@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { add, remove, increment, decrement } from '../../../features/cart/cartSlice';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import products from '../../../data/data';
+import products from '../../../data/products';
 import useTelegram from '../../hooks/useTelegram';
 import useCartStatus from 'common/hooks/useCartStatus';
 import Button from '../Button/Button';

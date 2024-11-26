@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useTelegram from '../../hooks/useTelegram';
 import useCartStatus from 'common/hooks/useCartStatus';
 import ProductItem from '../ProductItem/ProductItem';
-import products from '../../../data/data';
+import products from '../../../data/products';
 import './ProductList.css';
 
 

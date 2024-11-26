@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react';
-import DOMPurify from 'dompurify';
 import useTelegram from '../../common/hooks/useTelegram';
 import useCartStatus from 'common/hooks/useCartStatus';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { clearCart } from './cartSlice';
-import products from '../../data/data';
+import { OrderForm } from 'common/components/OrderForm/OrderForm';
+import products from '../../data/products';
+import delivery from 'data/delivery';
 import './cart.css';
 
-const serverUrl = process.env.REACT_APP_SERVER_URL;
-
 function Cart() {
-    const [comment, setComment] = useState('');
-    const { tg } = useTelegram();
+    const { tg, user } = useTelegram();
     const { isEmpty, productsList, totalAmount } = useCartStatus();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [deliveryOption, setDeliveryOption] = useState('pickup');
+    const [readyDate, setReadyDate] = useState(null);
+    const [readyTime, setReadyTime] = useState(null);
+    const [comment, setComment] = useState('');
+    const serverUrl = `https://${process.env.REACT_APP_SERVER_URL}`;
+    const freeDeliveryThreshold = delivery.freeDeliveryThreshold;
+    const deliveryPrice = delivery.deliveryPrice;
 
     useEffect(() => {
         tg.BackButton.show();
@@ -25,19 +27,14 @@ function Cart() {
     })
 
     useEffect(() => {
-        tg.onEvent('invoiceClosed', onInvoiceCloseHandler);
-        
-        return () => {
-            tg.offEvent('invoiceClosed', onInvoiceCloseHandler);
-        }
-    })
-
-    useEffect(() => {
-        if (!isEmpty) {
+        if (!isEmpty && deliveryOption && readyDate && readyTime ) {
             tg.MainButton
                 .setParams({
                     color: '#31b545',
-                    text: `Оплатить ${totalAmount} руб.`,
+                    text: 
+                        deliveryOption === 'delivery'
+                            ? `Оплатить ${(totalAmount + deliveryCost()).toFixed(2)} руб.`
+                            : `Оплатить ${totalAmount.toFixed(2)} руб.`,
                     hasShineEffect: true
                 })
                 .show();
@@ -47,9 +44,13 @@ function Cart() {
             tg.MainButton.hide();
             tg.MainButton.offClick(onMainBtnClickHandler);
         };
-    }, [isEmpty, comment])
+    }, [isEmpty, deliveryOption, readyDate, readyTime])
 
     const openPaymentSystem = async () => {
+        // const userId = user?.id;
+        // const sessionId = Date.now();
+        // const callbackUrl = `${webUrl}/payment-callback?userId=${userId}&sessionId=${sessionId}`;
+
         try {
             const response = await fetch(`${serverUrl}/create-invoice`, {
                 method: 'POST',
@@ -57,12 +58,16 @@ function Cart() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    productsList: productsList,
-                    payload: {
-                        comment: comment
-                    }
+                    paymentPayload : {
+                        productsList   : productsList,
+                        deliveryOption : deliveryOption,
+                        deliveryCost   : deliveryOption === 'delivery' ? deliveryCost() : 0,
+                        readyDate      : readyDate,
+                        readyTime      : readyTime.value,
+                        comment        : comment
+                    },
+                    // callbackUrl: callbackUrl
                 })
-                // body: JSON.stringify(productsList),
             })
             
             const data = await response.json();
@@ -73,26 +78,16 @@ function Cart() {
         }
     }
 
+    const deliveryCost = () => {
+        return ( totalAmount > freeDeliveryThreshold || totalAmount === freeDeliveryThreshold ) ? 0 : deliveryPrice;
+    }
+
     const onMainBtnClickHandler = () => {
         openPaymentSystem();
     }
 
-    const onInputChangeHandler = (event) => {
-        console.log(event.target.value)
-        const sanitizedValue = DOMPurify.sanitize(event.target.value);
-        console.log(sanitizedValue)
-        setComment(sanitizedValue);
-    }
-
     const onEditHandler = () => {
         navigate('/');
-    }
-
-    const onInvoiceCloseHandler = (data) => {
-        if (data.status === 'paid') {
-            dispatch(clearCart());
-            tg.close();
-        }
     }
 
     return (
@@ -126,15 +121,35 @@ function Cart() {
                     : <div className='order-item'>В корзине нет товаров</div>
                 }
             </div>
-            {!isEmpty && 
-                <div className='text-field-wrap'>
-                    <textarea 
-                        className='text-field' 
-                        rows='1' 
-                        placeholder='Комментарий к заказу'
-                        onChange={onInputChangeHandler}
-                    ></textarea>
+            {!isEmpty && deliveryOption === 'delivery' &&
+                <div className='cart-delivery'>
+                    <b>Доставка курьером</b>
+                    <div>
+                        {deliveryCost() ? `${deliveryCost().toFixed(2)} руб.` : 'Бесплатно'}
+                    </div>
                 </div>
+            }
+            {!isEmpty && 
+                <div className='summary'>
+                    <div className='summary-text'>Итого</div>
+                    <div className='summary-amount'> 
+                        { deliveryOption === 'delivery'
+                            ? `${(totalAmount + deliveryCost()).toFixed(2)} руб.`
+                            : `${totalAmount.toFixed(2)} руб.`
+                        }
+                    </div>
+                </div>
+            }
+            {!isEmpty && 
+                <OrderForm 
+                    setDeliveryOption={setDeliveryOption}
+                    setReadyDate={setReadyDate}
+                    setReadyTime={setReadyTime}
+                    setComment={setComment}
+                    deliveryOption={deliveryOption}
+                    readyDate={readyDate}
+                    readyTime={readyTime}
+                />
             }
         </div>
     )

@@ -82,6 +82,7 @@ body {
   /* Colors: */
     --primary-color: #f8a917;
     --accent-color: #31b545;
+    --accent-color-translucent: rgba(49, 181, 69, 0.3);
 
   /* Sizes: */
     --big-padding: 1.5rem;
@@ -90,4 +91,6 @@ body {
     --big-gap: 1.5rem;
     --medium-gap: 0.75rem;
     --small-gap: 0.5rem;
+
+    --border-radius: 0.5rem;
 }

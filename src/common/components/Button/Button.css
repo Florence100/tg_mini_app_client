@@ -1,6 +1,6 @@
 .button {
     padding: 0.25rem;
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius);
     color: var(--tg-theme-button-text-color);
     text-transform: uppercase;
     padding: 0.5rem;
