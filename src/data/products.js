@@ -11,7 +11,7 @@ const products = [
             calorie: '387'
         },
         weight: '100 г.',
-        img: 'img/Cake_148.png'
+        img: './img/Cake_148.png'
     },
     {
         id: 2,

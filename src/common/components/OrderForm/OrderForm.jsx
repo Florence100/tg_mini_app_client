@@ -1,13 +1,21 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import DOMPurify from 'dompurify';
 import DatePicker from 'react-datepicker';
-import { registerLocale } from  "react-datepicker";
+import { registerLocale } from  'react-datepicker';
 import { ru } from 'date-fns/locale/ru';
 import Select from 'react-select';
+import { deliveryChange } from './formSlice';
 import 'react-datepicker/dist/react-datepicker.css';
-import './OrderForm.css';
+import './orderForm.css';
 
 function OrderForm(props) {
+    const dispatch = useDispatch();
+    const deliveryOption = useSelector(state => state.form.delivery);
+    const comment = props.comment;
+    const readyDate = props.readyDate;
+    const readyTime = props.readyTime;
+
     registerLocale('ru', ru);
 
     const timeOptions = [
@@ -52,8 +60,9 @@ function OrderForm(props) {
                         id='pickup'
                         name='deliveryOption'
                         value='pickup'
-                        checked={props.deliveryOption === 'pickup'}
-                        onChange={(e) => props.setDeliveryOption(e.target.value)}
+                        checked={deliveryOption === 'pickup'}
+                        onChange={(e) => dispatch(deliveryChange(e.target.value))}
+                        // onChange={(e) => props.setDeliveryOption(e.target.value)}
                     />
                     <span className='custom-radio'></span>
                     <span>Самовывоз</span>
@@ -64,8 +73,9 @@ function OrderForm(props) {
                         id='delivery'
                         name='deliveryOption'
                         value='delivery'
-                        checked={props.deliveryOption === 'delivery'}
-                        onChange={(e) => props.setDeliveryOption(e.target.value)}
+                        checked={deliveryOption === 'delivery'}
+                        onChange={(e) => dispatch(deliveryChange(e.target.value))}
+                        // onChange={(e) => props.setDeliveryOption(e.target.value)}
                     />
                     <span className='custom-radio'></span>
                     <span>Доставка курьером - <b>500 руб.</b>*</span>
@@ -76,10 +86,10 @@ function OrderForm(props) {
             </div>
             <div className='readyDate'>
                 <label htmlFor='readyDate' className='header'>
-                    {props.deliveryOption === 'pickup' ? 'Дата самовывоза:' : 'Дата доставки:'}
+                    {deliveryOption === 'pickup' ? 'Дата самовывоза:' : 'Дата доставки:'}
                 </label>
                 <DatePicker
-                    selected={props.readyDate}
+                    selected={readyDate}
                     onChange={onDateChangeHandler}
                     minDate={new Date()}
                     maxDate={getMaxDate()}
@@ -90,15 +100,15 @@ function OrderForm(props) {
             </div>
             <div className='readyTime'>
                 <label htmlFor='readyTime' className='header'>
-                    {props.deliveryOption === 'pickup' ? 'Время самовывоза:' : 'Время доставки:'}
+                    {deliveryOption === 'pickup' ? 'Время самовывоза:' : 'Время доставки:'}
                 </label>
                 <Select
                     options={timeOptions}
-                    value={props.readyTime}
+                    value={readyTime}
                     onChange={onTimeChangeHandler}
                     isOptionDisabled={(option) => {
                         const currentDate = new Date();
-                        const selectedDate = new Date(props.readyDate);
+                        const selectedDate = new Date(readyDate);
                         selectedDate.setHours(parseInt(option.value.split(':')[0]));
                         //готовность не ранее 1 часа от текущего времени
                         return currentDate.getTime() + 1 * 60 * 60 * 1000 > selectedDate.getTime();
@@ -106,6 +116,7 @@ function OrderForm(props) {
                     placeholder='Выберите время'
                 />
             </div>
+            
             <div className='text-field-wrap'>
                 <textarea 
                     className='text-field' 

@@ -1,11 +1,11 @@
-import './ProductItem.css';
-import Button from '../Button/Button';
+import Button from '../button/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { add, remove, increment, decrement } from '../../../features/cart/cartSlice';
-import ProductCounter from '../ProductCounter/ProductCounter';
+import ProductCounter from '../productCounter/ProductCounter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import './productItem.css';
 
 
 function ProductItem({ product, className }) {

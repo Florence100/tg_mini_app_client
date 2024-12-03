@@ -7,13 +7,13 @@ import {
 import { Provider } from 'react-redux';
 import App from './app/App';
 import store from './app/store';
-import  { ProductList } from './common/components/ProductList/ProductList';
-import ErrorPage from './common/components/ErrorPage/ErrorPage';
+import  { ProductList } from './common/components/productList/ProductList';
+import ErrorPage from './common/components/errorPage/ErrorPage';
 import {
     ProductCard,
     loader as productCardLoader
-} from './common/components/ProductCard/ProductCard';
-import Cart from 'features/cart/Cart';
+} from './common/components/productCard/ProductCard';
+import Checkout from './common/components/checkout/Checkout';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -32,8 +32,8 @@ const router = createBrowserRouter([
                 loader: productCardLoader,
             },
             {
-                path: 'cart',
-                element: <Cart />
+                path: 'checkout',
+                element: <Checkout />
             }
         ],
     },

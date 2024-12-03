@@ -1,0 +1,5 @@
+.checkout {
+    background-color: var(--tg-theme-secondary-bg-color);
+    width: 100%;
+    min-height: 100vh;
+}

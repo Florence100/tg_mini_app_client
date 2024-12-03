@@ -1,4 +1,3 @@
-import './ProductCard.css';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { add, remove, increment, decrement } from '../../../features/cart/cartSlice';
@@ -6,12 +5,13 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import products from '../../../data/products';
 import useTelegram from '../../hooks/useTelegram';
 import useCartStatus from 'common/hooks/useCartStatus';
-import Button from '../Button/Button';
-import ProductCounter from '../ProductCounter/ProductCounter';
+import Button from '../button/Button';
+import ProductCounter from '../productCounter/ProductCounter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import './productCard.css';
 
-const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
+const PUBLIC_URL = `https://${process.env.REACT_APP_PUBLIC_URL}`;
 
 function loader({ params }) {
     const productId = params.productId;
@@ -26,7 +26,7 @@ function ProductCard() {
     // const isEmpty = Object.keys(cart).length > 0 ? false : true;
 
     const onMainBtnClickHandler = () => {
-        navigate('/cart');
+        navigate('/checkout');
         tg.MainButton.offClick(onMainBtnClickHandler);
     }
 

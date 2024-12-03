@@ -1,4 +1,4 @@
-import './ProductCounter.css';
+import './productCounter.css';
 
 function ProductCounter({count, className}) {
     return (

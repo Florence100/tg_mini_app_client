@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useTelegram from '../../hooks/useTelegram';
 import useCartStatus from 'common/hooks/useCartStatus';
-import ProductItem from '../ProductItem/ProductItem';
+import ProductItem from '../productItem/ProductItem';
 import products from '../../../data/products';
-import './ProductList.css';
+import './productList.css';
 
 
 function ProductList() {
@@ -36,7 +36,7 @@ function ProductList() {
     })
 
     const onMainBtnClickHandler = () => {
-        navigate('/cart');
+        navigate('/checkout');
         tg.MainButton.offClick(onMainBtnClickHandler);
     }
 
