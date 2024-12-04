@@ -1,13 +1,11 @@
 import useCartStatus from './useCartStatus';
-import delivery from '../../data/delivery';
+import deliveryDetails from '../../data/deliveryDetails';
 
 export default function useDeliveryCost() {
-    const { totalAmount } = useCartStatus();
-    const freeDeliveryThreshold = delivery.freeDeliveryThreshold;
-    const deliveryPrice = delivery.deliveryPrice;
-    const deliveryCost = ( totalAmount > freeDeliveryThreshold || totalAmount === freeDeliveryThreshold ) ? 0 : deliveryPrice;
-
-    // console.log('deliveryCost', deliveryCost)
+    const { cartAmount } = useCartStatus();
+    const freeDeliveryThreshold = deliveryDetails.freeDeliveryThreshold;
+    const deliveryPrice = deliveryDetails.deliveryPrice;
+    const deliveryCost = ( cartAmount > freeDeliveryThreshold || cartAmount === freeDeliveryThreshold ) ? 0 : deliveryPrice;
 
     return deliveryCost;
 }

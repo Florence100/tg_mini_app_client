@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-const getProductsList = (entities) => {
+const getCartItems = (entities) => {
     return Object.values(entities).map(item => ({
         id: item.id,
         count: item.count,
@@ -9,23 +9,23 @@ const getProductsList = (entities) => {
     }));
 };
 
-const getTotalAmount = (productsList) => {
-    const totalAmount = productsList.reduce((currentSum, currentNumber) => {
+const getCartAmount = (cartItems) => {
+    const cartAmount = cartItems.reduce((currentSum, currentNumber) => {
         return currentSum + ( currentNumber.count * currentNumber.price );
     }, 0)
     
-    return +totalAmount.toFixed(2);
+    return +cartAmount.toFixed(2);
 }
 
 export default function useCartStatus() {
     const entities = useSelector(state => state.cart.entities);
-    const isEmpty = Object.keys(entities).length > 0 ? false : true;
-    const productsList = getProductsList(entities);
-    const totalAmount = getTotalAmount(productsList);
+    const isCartEmpty = Object.keys(entities).length > 0 ? false : true;
+    const cartItems = getCartItems(entities);
+    const cartAmount = getCartAmount(cartItems);
 
     return {
-        isEmpty,
-        productsList,
-        totalAmount
+        isCartEmpty,
+        cartItems,
+        cartAmount
     }
 }

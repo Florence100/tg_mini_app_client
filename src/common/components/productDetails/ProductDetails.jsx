@@ -9,29 +9,27 @@ import Button from '../button/Button';
 import ProductCounter from '../productCounter/ProductCounter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import './productCard.css';
+import './productDetails.css';
 
 const PUBLIC_URL = `https://${process.env.REACT_APP_PUBLIC_URL}`;
 
-function loader({ params }) {
+function productDetailLoader({ params }) {
     const productId = params.productId;
     return productId;
 }
 
-function ProductCard() {
+export default function ProductDetails() {
     const { tg } = useTelegram();
-    const { isEmpty } = useCartStatus();
+    const { isCartEmpty } = useCartStatus();
     const navigate = useNavigate();
-    // const cart = useSelector(state => state.cart.entities);
-    // const isEmpty = Object.keys(cart).length > 0 ? false : true;
 
-    const onMainBtnClickHandler = () => {
+    const handleMainBtnClick = () => {
         navigate('/checkout');
-        tg.MainButton.offClick(onMainBtnClickHandler);
+        tg.MainButton.offClick(handleMainBtnClick);
     }
 
     useEffect(() => {
-        if (!isEmpty) {
+        if (!isCartEmpty) {
             tg.MainButton
                 .setParams({
                     color: '#31b545',
@@ -39,15 +37,15 @@ function ProductCard() {
                     hasShineEffect: true
                 })
                 .show();
-            tg.MainButton.onClick(onMainBtnClickHandler);
+            tg.MainButton.onClick(handleMainBtnClick);
         } else {
             tg.MainButton.hide();
-            tg.MainButton.offClick(onMainBtnClickHandler);
+            tg.MainButton.offClick(handleMainBtnClick);
         }
         return () => {
             tg.MainButton.hide();
         };
-    }, [isEmpty])
+    }, [isCartEmpty])
 
     useEffect(() => {
         tg.BackButton.show();
@@ -66,15 +64,15 @@ function ProductCard() {
 
     const dispatch = useDispatch();
 
-    const onAddHandler = () => {
+    const handleAddClick = () => {
         dispatch(add(product));
     }
 
-    const onIncrementHandler = () => {
+    const handleIncrClick = () => {
         dispatch(increment(product));
     }
 
-    const onDecrementHandler = () => {
+    const handleDecrClick = () => {
         if (count > 1) {
             dispatch(decrement(product));
         } else {
@@ -113,15 +111,15 @@ function ProductCard() {
                 </div>
             </div>
             {count === 0 
-                ? <Button className='add-btn' onClick={onAddHandler}>Добавить</Button>
+                ? <Button className='add-btn' onClick={handleAddClick}>Добавить</Button>
                 : <div className='control-box'>
                     <div>Добавлено в корзину:</div>
                     <div className='count'>
-                        <Button className='decr-btn' onClick={onDecrementHandler}>
+                        <Button className='decr-btn' onClick={handleDecrClick}>
                             <FontAwesomeIcon icon={faMinus} />
                         </Button>
                         <ProductCounter count={count} className={'card-counter'}/>
-                        <Button className='incr-btn' onClick={onIncrementHandler}>
+                        <Button className='incr-btn' onClick={handleIncrClick}>
                             <FontAwesomeIcon icon={faPlus} />
                         </Button>
                     </div>
@@ -131,4 +129,4 @@ function ProductCard() {
     )
 }
 
-export { ProductCard, loader };
+export { productDetailLoader };

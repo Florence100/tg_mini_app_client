@@ -2,18 +2,18 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useTelegram from '../../hooks/useTelegram';
 import useCartStatus from 'common/hooks/useCartStatus';
-import ProductItem from '../productItem/ProductItem';
+import ProductPreview from '../productPreview/ProductPreview';
 import products from '../../../data/products';
-import './productList.css';
+import './productCatalog.css';
 
 
-function ProductList() {
+export default function ProductCatalog() {
     const { tg } = useTelegram();
-    const { isEmpty } = useCartStatus();
+    const { isCartEmpty } = useCartStatus();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isEmpty) {
+        if (!isCartEmpty) {
             tg.MainButton
                 .setParams({
                     color: '#31b545',
@@ -21,30 +21,30 @@ function ProductList() {
                     hasShineEffect: true
                 })
                 .show();
-            tg.MainButton.onClick(onMainBtnClickHandler);
+            tg.MainButton.onClick(handleMainBtnClick);
         } else {
             tg.MainButton.hide();
-            tg.MainButton.offClick(onMainBtnClickHandler);
+            tg.MainButton.offClick(handleMainBtnClick);
         }
         return () => {
             tg.MainButton.hide();
         };
-    }, [isEmpty])
+    }, [isCartEmpty])
 
     useEffect(() => {
         tg.BackButton.hide();
     })
 
-    const onMainBtnClickHandler = () => {
+    const handleMainBtnClick = () => {
         navigate('/checkout');
-        tg.MainButton.offClick(onMainBtnClickHandler);
+        tg.MainButton.offClick(handleMainBtnClick);
     }
 
     return (
-        <div className='list'>
+        <div className='product-catalog'>
             {
                 products.map((item) => (
-                    <ProductItem key={item.id}
+                    <ProductPreview key={item.id}
                         product={item}
                         className={'item'}
                     />
@@ -53,5 +53,3 @@ function ProductList() {
         </div>
     )
 }
-
-export { ProductList };

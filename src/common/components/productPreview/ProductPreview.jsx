@@ -5,24 +5,24 @@ import { add, remove, increment, decrement } from '../../../features/cart/cartSl
 import ProductCounter from '../productCounter/ProductCounter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import './productItem.css';
+import './productPreview.css';
 
 
-function ProductItem({ product, className }) {
+export default function ProductPreview({ product, className }) {
     const productId = product.id;
     const count = useSelector(state => state.cart.entities[productId]?.count) || 0;
 
     const dispatch = useDispatch();
 
-    const onAddHandler = () => {
+    const handleAddClick = () => {
         dispatch(add(product));
     }
 
-    const onIncrementHandler = () => {
+    const handleIncrClick = () => {
         dispatch(increment(product));
     }
 
-    const onDecrementHandler = () => {
+    const handleDecrClick = () => {
         if (count > 1) {
             dispatch(decrement(product));
         } else {
@@ -42,12 +42,12 @@ function ProductItem({ product, className }) {
             </div>
 
             {count === 0 
-                ? <Button className='add-btn' onClick={onAddHandler}>Добавить</Button>
+                ? <Button className='add-btn' onClick={handleAddClick}>Добавить</Button>
                 : <div className='btns-box'>
-                    <Button className='decr-btn' onClick={onDecrementHandler}>
+                    <Button className='decr-btn' onClick={handleDecrClick}>
                         <FontAwesomeIcon icon={faMinus} />
                     </Button>
-                    <Button className='incr-btn' onClick={onIncrementHandler}>
+                    <Button className='incr-btn' onClick={handleIncrClick}>
                         <FontAwesomeIcon icon={faPlus} />
                     </Button>
                 </div>
@@ -55,5 +55,3 @@ function ProductItem({ product, className }) {
         </div>
     )
 }
-
-export default ProductItem;

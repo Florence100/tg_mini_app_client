@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Cart from '../../../features/cart/Cart';
-import { OrderForm } from '../orderForm/OrderForm';
+import OrderForm from '../../../features/orderForm/OrderForm';
 import useTelegram from '../../hooks/useTelegram';
 import useCartStatus from '../../hooks/useCartStatus';
 import useDeliveryCost from '../../hooks/useDeliveryCost';
@@ -11,7 +11,7 @@ import './checkout.css';
 function Checkout () {
     const { tg } = useTelegram();
     const navigate = useNavigate();
-    const { isEmpty, productsList, totalAmount } = useCartStatus();
+    const { isCartEmpty, cartItems, cartAmount } = useCartStatus();
     const [readyDate, setReadyDate] = useState(null);
     const [readyTime, setReadyTime] = useState(null);
     const [comment, setComment] = useState('');
@@ -20,21 +20,31 @@ function Checkout () {
     const deliveryOption = useSelector(state => state.form.delivery);
 
     useEffect(() => {
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => {
+        function handleBackBtnClick () {
+            console.log('------------ handleBackBtnClick ------------');
             navigate(-1);
-        })
-    })
+        }
+        console.log('------------ useeffect mount ------------')
+
+        tg.BackButton.show();
+        tg.BackButton.onClick(handleBackBtnClick)
+
+        return () => {
+            console.log('------------ useeffect Unmount ------------')
+            tg.BackButton.hide();
+            tg.BackButton.offClick(handleBackBtnClick)
+        }
+    }, [])
 
     useEffect(() => {
-        if (!isEmpty && deliveryOption && readyDate && readyTime ) {
+        if (!isCartEmpty && deliveryOption && readyDate && readyTime ) {
             tg.MainButton
                 .setParams({
                     color: '#31b545',
                     text: 
                         deliveryOption === 'delivery'
-                            ? `Оплатить ${(totalAmount + deliveryCost).toFixed(2)} руб.`
-                            : `Оплатить ${totalAmount.toFixed(2)} руб.`,
+                            ? `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`
+                            : `Оплатить ${cartAmount.toFixed(2)} руб.`,
                     hasShineEffect: true
                 })
                 .show();
@@ -44,13 +54,14 @@ function Checkout () {
             tg.MainButton.hide();
             tg.MainButton.offClick(onMainBtnClickHandler);
         };
-    }, [isEmpty, deliveryOption, deliveryCost, readyDate, readyTime])
+    }, [isCartEmpty, deliveryOption, deliveryCost, readyDate, readyTime])
 
 
     useEffect(() => {
         const onInvoiceCloseHandler = (eventType, eventData) => {
             if (eventType === 'invoice_closed') {
                 if (eventData.status === 'paid') {
+                    console.log('Successful payment. Mini app is closing');
                     tg.close();
                 }
             }
@@ -112,7 +123,7 @@ function Checkout () {
                 },
                 body: JSON.stringify({
                     paymentPayload : {
-                        productsList   : productsList,
+                        cartItems      : cartItems,
                         deliveryOption : deliveryOption,
                         deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
                         readyDate      : readyDate,
@@ -133,7 +144,7 @@ function Checkout () {
     return (
         <div className='checkout'>
             <Cart></Cart>
-            {!isEmpty && 
+            {!isCartEmpty && 
                 <OrderForm 
                     comment={comment}
                     readyDate={readyDate}

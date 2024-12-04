@@ -1,6 +1,6 @@
-const delivery = {
+const deliveryDetails = {
     freeDeliveryThreshold: 5000,
     deliveryPrice: 500
 }
 
-export default delivery;
+export default deliveryDetails;
