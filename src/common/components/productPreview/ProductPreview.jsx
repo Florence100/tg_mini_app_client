@@ -10,7 +10,7 @@ import './productPreview.css';
 
 export default function ProductPreview({ product, className }) {
     const productId = product.id;
-    const count = useSelector(state => state.cart.entities[productId]?.count) || 0;
+    const productCount = useSelector(state => state.cart.entities[productId]?.count) || 0;
 
     const dispatch = useDispatch();
 
@@ -23,7 +23,7 @@ export default function ProductPreview({ product, className }) {
     }
 
     const handleDecrClick = () => {
-        if (count > 1) {
+        if (productCount > 1) {
             dispatch(decrement(product));
         } else {
             dispatch(remove(product));
@@ -38,10 +38,10 @@ export default function ProductPreview({ product, className }) {
                 </Link>
                 <div className='name'>{product.name}</div>
                 <div className='price'>{product.price.toFixed(2)} руб.</div>
-                {count > 0 && <ProductCounter count={count} className={'item-counter'}/>}
+                {productCount > 0 && <ProductCounter count={productCount} className={'item-counter'}/>}
             </div>
 
-            {count === 0 
+            {productCount === 0 
                 ? <Button className='add-btn' onClick={handleAddClick}>Добавить</Button>
                 : <div className='btns-box'>
                     <Button className='decr-btn' onClick={handleDecrClick}>

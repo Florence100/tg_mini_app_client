@@ -4,7 +4,7 @@ import { add, remove, increment, decrement } from '../../../features/cart/cartSl
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import products from '../../../data/products';
 import useTelegram from '../../hooks/useTelegram';
-import useCartStatus from 'common/hooks/useCartStatus';
+import { useIsCartEmpty } from '../../hooks/useCartStatus';
 import Button from '../button/Button';
 import ProductCounter from '../productCounter/ProductCounter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,15 +20,14 @@ function productDetailLoader({ params }) {
 
 export default function ProductDetails() {
     const { tg } = useTelegram();
-    const { isCartEmpty } = useCartStatus();
+    const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
 
-    const handleMainBtnClick = () => {
-        navigate('/checkout');
-        tg.MainButton.offClick(handleMainBtnClick);
-    }
-
     useEffect(() => {
+        const handleMainBtnClick = () => {
+            navigate('/checkout');
+        }
+
         if (!isCartEmpty) {
             tg.MainButton
                 .setParams({
@@ -44,8 +43,9 @@ export default function ProductDetails() {
         }
         return () => {
             tg.MainButton.hide();
+            tg.MainButton.offClick(handleMainBtnClick);
         };
-    }, [isCartEmpty])
+    }, [isCartEmpty, tg, navigate])
 
     useEffect(() => {
         tg.BackButton.show();
@@ -53,7 +53,7 @@ export default function ProductDetails() {
             navigate(-1);
         })
         tg.MainButton.setText('Перейти в корзину');
-    })
+    }, [tg, navigate])
 
     const productId = useLoaderData();
     //заменить обращением к БД!

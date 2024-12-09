@@ -1,7 +1,5 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import useCartStatus from '../../common/hooks/useCartStatus';
-import useDeliveryCost from '../../common/hooks/useDeliveryCost';
 import products from '../../data/products';
 import './cart.css';
 
@@ -22,13 +20,11 @@ function CartHeader() {
 }
 
 
-function Order() {
-    const { isCartEmpty, cartItems } = useCartStatus();
-
+function Order(props) {
     return (
         <div className='order'>
-            {!isCartEmpty
-                ? cartItems.map(function(item) {
+            {!props.isCartEmpty
+                ? props.cartItems.map(function(item) {
                     //заменить обращением к БД!
                     const product = products.filter(function(product) {
                         return product.id === Number(item.id);
@@ -55,8 +51,8 @@ function Order() {
 }
 
 
-function CartDelivery () {
-    const deliveryCost = useDeliveryCost();
+function CartDelivery(props) {
+    const deliveryCost = props.deliveryCost;
 
     return (
         <div className='cart-delivery'>
@@ -69,18 +65,17 @@ function CartDelivery () {
 }
 
 
-function CartSummary () {
+function CartSummary(props) {
     const deliveryOption = useSelector(state => state.form.delivery);
-    const deliveryCost = useDeliveryCost();
-    const { cartAmount } = useCartStatus();
+    const deliveryCost = props.deliveryCost;
 
     return (
         <div className='summary'>
             <div className='summary-text'>Итого</div>
             <div className='summary-amount'> 
                 { deliveryOption === 'delivery'
-                    ? `${(cartAmount + deliveryCost).toFixed(2)} руб.`
-                    : `${cartAmount.toFixed(2)} руб.`
+                    ? `${(props.cartAmount + deliveryCost).toFixed(2)} руб.`
+                    : `${props.cartAmount.toFixed(2)} руб.`
                 }
             </div>
         </div>
@@ -88,19 +83,30 @@ function CartSummary () {
 }
 
 
-export default function Cart() {
+export default function Cart(props) {
     const deliveryOption = useSelector(state => state.form.delivery);
-    const { isCartEmpty } = useCartStatus();
+    const isCartEmpty = props.isCartEmpty;
+    const cartAmount = props.cartAmount;
+    const cartItems = props.cartItems;
+    const deliveryCost = props.deliveryCost;
 
     return (
         <div className='cart'>
             <CartHeader />
-            <Order />
+            <Order
+                isCartEmpty={isCartEmpty}
+                cartItems={cartItems}
+            />
             {!isCartEmpty && deliveryOption === 'delivery' &&
-                <CartDelivery />
+                <CartDelivery 
+                    deliveryCost={deliveryCost}
+                />
             }
             {!isCartEmpty && 
-                <CartSummary />
+                <CartSummary
+                    cartAmount={cartAmount}
+                    deliveryCost={deliveryCost}
+                />
             }
         </div>
     )

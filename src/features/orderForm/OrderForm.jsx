@@ -12,7 +12,7 @@ import './orderForm.css';
 
 function DeliveryChoice () {
     const dispatch = useDispatch();
-    const deliveryOption = useSelector (state => state.form.delivery);
+    const deliveryOption = useSelector(state => state.form.delivery);
 
     return (
         <div className='delivery'>

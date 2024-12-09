@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useTelegram from '../../hooks/useTelegram';
-import useCartStatus from 'common/hooks/useCartStatus';
+import { useIsCartEmpty } from '../../hooks/useCartStatus';
 import ProductPreview from '../productPreview/ProductPreview';
 import products from '../../../data/products';
 import './productCatalog.css';
@@ -9,10 +9,15 @@ import './productCatalog.css';
 
 export default function ProductCatalog() {
     const { tg } = useTelegram();
-    const { isCartEmpty } = useCartStatus();
+    const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
 
     useEffect(() => {
+        const handleMainBtnClick = () => {
+            console.log('handleMainBtnClick');
+            navigate('/checkout');
+        }
+
         if (!isCartEmpty) {
             tg.MainButton
                 .setParams({
@@ -28,17 +33,13 @@ export default function ProductCatalog() {
         }
         return () => {
             tg.MainButton.hide();
+            tg.MainButton.offClick(handleMainBtnClick);
         };
-    }, [isCartEmpty])
+    }, [isCartEmpty, navigate, tg])
 
     useEffect(() => {
         tg.BackButton.hide();
     })
-
-    const handleMainBtnClick = () => {
-        navigate('/checkout');
-        tg.MainButton.offClick(handleMainBtnClick);
-    }
 
     return (
         <div className='product-catalog'>

@@ -1,15 +1,24 @@
 import { useSelector } from 'react-redux';
 
-const getCartItems = (entities) => {
-    return Object.values(entities).map(item => ({
-        id: item.id,
-        count: item.count,
-        price: item.price,
-        name: item.name
-    }));
-};
 
-const getCartAmount = (cartItems) => {
+function useIsCartEmpty() {
+    console.log('---------- useIsCartEmpty ------------');
+    const entities = useSelector(state => state.cart.entities);
+    return Object.keys(entities).length > 0 ? false : true;
+}
+
+function useCartItems() {
+    console.log('---------- useCartItems ------------');
+    const entities = useSelector(state => state.cart.entities);
+    const cartItems = Object.values(entities);
+
+    return cartItems;
+}
+
+function useCartAmount() {
+    console.log('---------- useCartAmount ------------');
+    const entities = useSelector(state => state.cart.entities);
+    const cartItems = Object.values(entities);
     const cartAmount = cartItems.reduce((currentSum, currentNumber) => {
         return currentSum + ( currentNumber.count * currentNumber.price );
     }, 0)
@@ -17,15 +26,5 @@ const getCartAmount = (cartItems) => {
     return +cartAmount.toFixed(2);
 }
 
-export default function useCartStatus() {
-    const entities = useSelector(state => state.cart.entities);
-    const isCartEmpty = Object.keys(entities).length > 0 ? false : true;
-    const cartItems = getCartItems(entities);
-    const cartAmount = getCartAmount(cartItems);
 
-    return {
-        isCartEmpty,
-        cartItems,
-        cartAmount
-    }
-}
+export { useIsCartEmpty, useCartItems, useCartAmount }

@@ -4,39 +4,73 @@ import { useNavigate } from 'react-router-dom';
 import Cart from '../../../features/cart/Cart';
 import OrderForm from '../../../features/orderForm/OrderForm';
 import useTelegram from '../../hooks/useTelegram';
-import useCartStatus from '../../hooks/useCartStatus';
 import useDeliveryCost from '../../hooks/useDeliveryCost';
 import './checkout.css';
+import { useIsCartEmpty, useCartItems, useCartAmount } from '../../hooks/useCartStatus';
+
+const serverUrl = `https://${ process.env.REACT_APP_SERVER_URL }`;
 
 function Checkout () {
     const { tg } = useTelegram();
+    const isCartEmpty = useIsCartEmpty();
+    const cartItems = useCartItems();
+    const cartAmount = useCartAmount();
     const navigate = useNavigate();
-    const { isCartEmpty, cartItems, cartAmount } = useCartStatus();
     const [readyDate, setReadyDate] = useState(null);
     const [readyTime, setReadyTime] = useState(null);
     const [comment, setComment] = useState('');
-    const serverUrl = `https://${ process.env.REACT_APP_SERVER_URL }`;
-    const deliveryCost = useDeliveryCost();
+    const deliveryCost = useDeliveryCost(cartAmount);
     const deliveryOption = useSelector(state => state.form.delivery);
+
 
     useEffect(() => {
         function handleBackBtnClick () {
-            console.log('------------ handleBackBtnClick ------------');
             navigate(-1);
         }
-        console.log('------------ useeffect mount ------------')
 
         tg.BackButton.show();
-        tg.BackButton.onClick(handleBackBtnClick)
+        tg.BackButton.onClick(handleBackBtnClick);
 
         return () => {
-            console.log('------------ useeffect Unmount ------------')
             tg.BackButton.hide();
-            tg.BackButton.offClick(handleBackBtnClick)
+            tg.BackButton.offClick(handleBackBtnClick);
         }
-    }, [])
+    }, [tg, navigate])
+
 
     useEffect(() => {
+        const openPaymentSystem = async () => {
+            console.log('Payment system will be open');
+            try {
+                const response = await fetch(`${serverUrl}/create-invoice`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        paymentPayload : {
+                            cartItems      : cartItems,
+                            deliveryOption : deliveryOption,
+                            deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
+                            readyDate      : readyDate,
+                            readyTime      : readyTime.value,
+                            comment        : comment
+                        },
+                    })
+                })
+                
+                const data = await response.json();
+                tg.openInvoice(data.invoiceLink);
+            } catch (error) {
+                console.error(error);
+                //Добавить навигацию на страницу ошибки
+            }
+        }
+
+        const handleMainBtnClick = () => {
+            openPaymentSystem();
+        }
+
         if (!isCartEmpty && deliveryOption && readyDate && readyTime ) {
             tg.MainButton
                 .setParams({
@@ -48,13 +82,13 @@ function Checkout () {
                     hasShineEffect: true
                 })
                 .show();
-            tg.MainButton.onClick(onMainBtnClickHandler);
+            tg.MainButton.onClick(handleMainBtnClick);
         }
         return () => {
             tg.MainButton.hide();
-            tg.MainButton.offClick(onMainBtnClickHandler);
+            tg.MainButton.offClick(handleMainBtnClick);
         };
-    }, [isCartEmpty, deliveryOption, deliveryCost, readyDate, readyTime])
+    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, comment])
 
 
     useEffect(() => {
@@ -78,6 +112,7 @@ function Checkout () {
             };
         }
 
+        // Обработка собственных событий Telegram
         let originalReceiveEvent;
 
         if (window.TelegramGameProxy) {
@@ -108,42 +143,17 @@ function Checkout () {
                 window.TelegramGameProxy_receiveEvent = originalReceiveEvent;
             }
         };
-    }, [])
+    }, [tg])
 
-    const onMainBtnClickHandler = () => {
-        openPaymentSystem();
-    }
-
-    const openPaymentSystem = async () => {
-        try {
-            const response = await fetch(`${serverUrl}/create-invoice`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    paymentPayload : {
-                        cartItems      : cartItems,
-                        deliveryOption : deliveryOption,
-                        deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
-                        readyDate      : readyDate,
-                        readyTime      : readyTime.value,
-                        comment        : comment
-                    },
-                })
-            })
-            
-            const data = await response.json();
-            tg.openInvoice(data.invoiceLink);
-        } catch (error) {
-            console.error(error);
-            //Добавить навигацию на страницу ошибки
-        }
-    }
 
     return (
         <div className='checkout'>
-            <Cart></Cart>
+            <Cart
+                isCartEmpty={isCartEmpty}
+                cartItems={cartItems}
+                cartAmount={cartAmount}
+                deliveryCost={deliveryCost}
+            ></Cart>
             {!isCartEmpty && 
                 <OrderForm 
                     comment={comment}
