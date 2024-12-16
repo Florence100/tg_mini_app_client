@@ -11,7 +11,9 @@ import { useIsCartEmpty, useCartItems, useCartAmount } from '../../hooks/useCart
 const serverUrl = `https://${ process.env.REACT_APP_SERVER_URL }`;
 
 function Checkout () {
-    const { tg } = useTelegram();
+    const { tg, user, chatId } = useTelegram();
+    // console.log('chatId: ', tg.initDataUnsafe)
+    // console.log('user: ', user)
     const isCartEmpty = useIsCartEmpty();
     const cartItems = useCartItems();
     const cartAmount = useCartAmount();
@@ -19,6 +21,7 @@ function Checkout () {
     const [readyDate, setReadyDate] = useState(null);
     const [readyTime, setReadyTime] = useState(null);
     const [comment, setComment] = useState('');
+    const [address, setAddress] = useState('');
     const deliveryCost = useDeliveryCost(cartAmount);
     const deliveryOption = useSelector(state => state.form.delivery);
 
@@ -49,11 +52,13 @@ function Checkout () {
                     },
                     body: JSON.stringify({
                         paymentPayload : {
+                            userId         : user.id,
                             cartItems      : cartItems,
                             deliveryOption : deliveryOption,
                             deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
                             readyDate      : readyDate,
                             readyTime      : readyTime.value,
+                            address        : address,
                             comment        : comment
                         },
                     })
@@ -71,32 +76,66 @@ function Checkout () {
             openPaymentSystem();
         }
 
-        if (!isCartEmpty && deliveryOption && readyDate && readyTime ) {
-            tg.MainButton
-                .setParams({
-                    color: '#31b545',
-                    text: 
-                        deliveryOption === 'delivery'
-                            ? `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`
-                            : `Оплатить ${cartAmount.toFixed(2)} руб.`,
-                    hasShineEffect: true
-                })
-                .show();
-            tg.MainButton.onClick(handleMainBtnClick);
+        if ( !isCartEmpty && readyDate && readyTime ) {
+            if (deliveryOption === 'pickup') {
+                tg.MainButton
+                    .setParams({
+                        color: '#31b545',
+                        text: `Оплатить ${cartAmount.toFixed(2)} руб.`,
+                        hasShineEffect: true
+                    })
+                    .show();
+                tg.MainButton.onClick(handleMainBtnClick);
+            } else if (deliveryOption === 'delivery' && address) {
+                tg.MainButton
+                    .setParams({
+                        color: '#31b545',
+                        text: `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`,
+                        hasShineEffect: true
+                    })
+                    .show();
+                tg.MainButton.onClick(handleMainBtnClick);
+            }
         }
         return () => {
             tg.MainButton.hide();
             tg.MainButton.offClick(handleMainBtnClick);
         };
-    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, comment])
+    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, comment, address])
 
 
     useEffect(() => {
+        const invoiceDelete = async (slug, status) => {
+            console.log('chatId: ', chatId)
+            try {
+                await fetch(`${serverUrl}/delete-invoice`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        slug: slug,
+                        status: status,
+                        chatId: chatId ? chatId : user?.id,
+                    })
+                })
+            } catch (error) {
+                console.error(error);
+                //Добавить навигацию на страницу ошибки
+            }
+        }
+
         const onInvoiceCloseHandler = (eventType, eventData) => {
             if (eventType === 'invoice_closed') {
+                console.log('eventData: ', eventData)
+                if (eventData.status === 'failed' || eventData.status === 'cancelled') {
+                    invoiceDelete(eventData.slug, eventData.status);
+                }
                 if (eventData.status === 'paid') {
                     console.log('Successful payment. Mini app is closing');
-                    tg.close();
+                    invoiceDelete(eventData.slug, eventData.status).then(() => {
+                        tg.close();
+                    });
                 }
             }
         }
@@ -157,10 +196,12 @@ function Checkout () {
             {!isCartEmpty && 
                 <OrderForm 
                     comment={comment}
+                    address={address}
                     readyDate={readyDate}
                     readyTime={readyTime}
                     setReadyDate={setReadyDate}
                     setReadyTime={setReadyTime}
+                    setAddress={setAddress}
                     setComment={setComment}
                 />
             }

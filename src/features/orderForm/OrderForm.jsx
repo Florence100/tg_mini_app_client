@@ -121,7 +121,26 @@ function ReadyTimeChoice (props) {
 }
 
 
-function CommentField (props) {
+function AddressField(props) {
+    const handleAddressChange = (event) => {
+        const sanitizedValue = DOMPurify.sanitize(event.target.value);
+        props.setAddress(sanitizedValue);
+    }
+
+    return (
+        <div className='text-field-wrap'>
+            <textarea
+                className = 'text-field'
+                rows = '1'
+                placeholder = 'Адрес доставки'
+                onChange = { handleAddressChange }
+            ></textarea>
+        </div>
+    )
+}
+
+
+function CommentField(props) {
     const handleCommentChange = (event) => {
         const sanitizedValue = DOMPurify.sanitize(event.target.value);
         props.setComment(sanitizedValue);
@@ -141,6 +160,10 @@ function CommentField (props) {
 
 
 export default function OrderForm (props) {
+    console.log('props: ', props)
+    const deliveryOption = useSelector(state => state.form.delivery);
+    console.log('deliveryOption: ', deliveryOption)
+
     const handleSubmit = (e) => {
         e.preventDefault();
     };
@@ -157,6 +180,12 @@ export default function OrderForm (props) {
                 readyTime    = { props.readyTime }
                 setReadyTime = { props.setReadyTime }
             />
+            { deliveryOption === 'delivery' && 
+                <AddressField 
+                    address    = { props.address }
+                    setAddress = { props.setAddress }
+                />
+            }
             <CommentField 
                 comment    = { props.comment }
                 setComment = { props.setComment }
