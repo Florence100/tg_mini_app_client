@@ -12,8 +12,6 @@ const serverUrl = `https://${ process.env.REACT_APP_SERVER_URL }`;
 
 function Checkout () {
     const { tg, user, chatId } = useTelegram();
-    // console.log('chatId: ', tg.initDataUnsafe)
-    // console.log('user: ', user)
     const isCartEmpty = useIsCartEmpty();
     const cartItems = useCartItems();
     const cartAmount = useCartAmount();
@@ -101,12 +99,11 @@ function Checkout () {
             tg.MainButton.hide();
             tg.MainButton.offClick(handleMainBtnClick);
         };
-    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, comment, address])
+    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, comment, address, user])
 
 
     useEffect(() => {
         const invoiceDelete = async (slug, status) => {
-            console.log('chatId: ', chatId)
             try {
                 await fetch(`${serverUrl}/delete-invoice`, {
                     method: 'POST',
@@ -182,7 +179,7 @@ function Checkout () {
                 window.TelegramGameProxy_receiveEvent = originalReceiveEvent;
             }
         };
-    }, [tg])
+    }, [tg, chatId, user])
 
 
     return (
