@@ -1,4 +1,5 @@
 import DOMPurify from 'dompurify';
+import TextField from '../textField/TextField';
 
 
 export default function AddressField(props) {
@@ -8,13 +9,10 @@ export default function AddressField(props) {
     }
 
     return (
-        <div className='text-field-wrap'>
-            <textarea
-                className='text-field'
-                rows='1'
-                placeholder='Адрес доставки'
-                onChange={handleAddressChange}
-            ></textarea>
-        </div>
+        <TextField 
+            rows='1'
+            placeholder='Адрес доставки'
+            onChange={handleAddressChange}
+        />
     )
 }

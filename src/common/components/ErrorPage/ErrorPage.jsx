@@ -6,7 +6,7 @@ export default function ErrorPage() {
     console.error(error);
 
     return (
-        <div className="error-page">
+        <div className='error-page'>
             <h1>Вот незадача!</h1>
             <p>Страница не найдена. Попробуйте еще</p>
             <p>

@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import products from '../../data/products';
+import { CSSTransition } from 'react-transition-group';
 import './cart.css';
 
 
@@ -92,22 +93,27 @@ export default function Cart(props) {
 
     return (
         <div className='cart'>
-            <CartHeader />
-            <Order
-                isCartEmpty={isCartEmpty}
-                cartItems={cartItems}
-            />
-            {!isCartEmpty && deliveryOption === 'delivery' &&
-                <CartDelivery 
-                    deliveryCost={deliveryCost}
+            <div className='cart-wrapper'>
+                <CartHeader />
+                <Order
+                    isCartEmpty={isCartEmpty}
+                    cartItems={cartItems}
                 />
-            }
-            {!isCartEmpty && 
-                <CartSummary
-                    cartAmount={cartAmount}
-                    deliveryCost={deliveryCost}
-                />
-            }
+                <CSSTransition 
+                    in={!isCartEmpty && deliveryOption === 'delivery'}
+                    timeout={125}
+                    classNames='cart-delivery'
+                    unmountOnExit
+                >
+                    <CartDelivery deliveryCost={deliveryCost} />
+                </CSSTransition>
+                {!isCartEmpty && 
+                    <CartSummary
+                        cartAmount={cartAmount}
+                        deliveryCost={deliveryCost}
+                    />
+                }
+            </div>
         </div>
     )
 }

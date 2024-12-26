@@ -8,7 +8,8 @@ import useDeliveryCost from '../../hooks/useDeliveryCost';
 import './checkout.css';
 import { useIsCartEmpty, useCartItems, useCartAmount } from '../../hooks/useCartStatus';
 
-const serverUrl = `https://${ process.env.REACT_APP_SERVER_URL }`;
+const serverUrl = `https://${process.env.REACT_APP_SERVER_URL}`;
+
 
 function Checkout () {
     const { tg, user, chatId } = useTelegram();

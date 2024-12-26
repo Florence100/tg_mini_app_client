@@ -19,14 +19,6 @@ export default function OrderForm (props) {
         e.preventDefault();
     };
 
-    const handleSelectMenuOpen = () => {
-        // Закрыть Datepicker, когда открывается select
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!')
-        if (datePickerRef.current) {
-          datePickerRef.current.setOpen(false);
-        }
-    };
-
     return (
         <form onSubmit={handleSubmit} className='order-form'>
             <DeliveryField />
@@ -38,8 +30,8 @@ export default function OrderForm (props) {
             />
             <TimeField
                 readyTime={props.readyTime}
+                readyDate={props.readyDate}
                 setReadyTime={props.setReadyTime}
-                handleSelectMenuOpen={handleSelectMenuOpen}
             />
             { deliveryOption === 'delivery' && 
                 <AddressField 

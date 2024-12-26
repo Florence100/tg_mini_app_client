@@ -1,4 +1,5 @@
 import DOMPurify from 'dompurify';
+import TextField from '../textField/TextField';
 
 
 export default function CommentField(props) {
@@ -8,13 +9,10 @@ export default function CommentField(props) {
     }
 
     return (
-        <div className='text-field-wrap'>
-            <textarea
-                className='text-field'
-                rows='1'
-                placeholder='Комментарий к заказу'
-                onChange={handleCommentChange}
-            ></textarea>
-        </div>
+        <TextField 
+            rows='1'
+            placeholder='Комментарий к заказу'
+            onChange={handleCommentChange}
+        />
     )
 }
