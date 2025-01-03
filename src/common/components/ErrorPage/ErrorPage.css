@@ -1,0 +1,11 @@
+.error-page {
+    width: 100%;
+    max-width: var(--max-width-content);
+    height: 100vh;
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}

@@ -1,0 +1,9 @@
+.order-form {
+    display: flex;
+    flex-direction: column;
+    padding: var(--big-padding) 0;
+    gap: var(--big-gap);
+    max-width: var(--max-width-content);
+    margin: 0 auto;
+}
+

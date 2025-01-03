@@ -1,0 +1,111 @@
+.cart {
+    background-color: var(--tg-theme-bg-color);
+    width: 100%;
+    border-bottom: 1px solid var(--tg-theme-section-separator-color);
+
+    .cart-wrapper {
+        max-width: var(--max-width-content);
+        margin: auto;
+    }
+
+    .cart-header {
+        display: flex;
+        justify-content: space-between;
+        padding: var(--big-padding);
+
+        .header-order {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .header-edit {
+            color: var(--accent-color);
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+            -webkit-tap-highlight-color: transparent;
+        }
+    }
+
+    .order {
+        padding: 0 var(--big-padding) var(--medium-padding) var(--big-padding);
+        display: flex;
+        flex-direction: column;
+        gap: var(--medium-gap);
+
+        .order-item {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            gap: var(--big-gap);
+            align-items: center;
+
+            .product-img {
+                width: auto;
+                max-height: 2.5rem;
+            }
+
+            .container {
+                display: flex;
+                gap: var(--small-gap);
+                flex-grow: 1;
+                flex-wrap: wrap;
+            }
+
+            .name {
+                font-weight: bold;
+            }
+
+            .count {
+                color: var(--primary-color);
+                font-weight: bold;
+            }
+
+            .price {
+                flex-wrap: wrap;
+            }
+        }
+    }
+
+    .cart-delivery {
+        padding: var(--medium-padding) var(--big-padding);
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .summary {
+        /* border-bottom: 1px solid var(--tg-theme-section-separator-color); */
+        padding: var(--medium-padding) var(--big-padding);
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+
+        .summary-text {
+            text-transform: uppercase;
+        }
+    }
+}
+
+
+/* CSSTransition Styles */
+.cart-delivery-enter {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.cart-delivery-enter-active {
+    opacity: 1;
+    max-height: 44px;
+    transition: opacity 100ms ease 25ms, max-height 100ms ease;
+} 
+
+.cart-delivery-exit {
+    opacity: 1;
+    max-height: 44px;
+}
+
+.cart-delivery-exit-active {
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 100ms ease, max-height 100ms ease 25ms;
+}

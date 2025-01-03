@@ -1,0 +1,21 @@
+.counter {
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.item-counter {
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: var(--tg-theme-button-text-color);
+        position: absolute;
+        top: -0.75rem;
+        right: -0.75rem;
+    }
+
+    &.card-counter {
+        height: 100%;
+    }
+}
