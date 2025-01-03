@@ -8,8 +8,8 @@ import { Provider } from 'react-redux';
 import App from './app/App';
 import store from './app/store';
 import ProductCatalog from './common/components/productCatalog/ProductCatalog';
-import ErrorPage from './common/components/errorPage/ErrorPage';
 import ProductDetails, { productDetailLoader } from './common/components/productDetails/ProductDetails';
+import ErrorPage from './common/components/errorPage/ErrorPage';
 import Checkout from './common/components/checkout/Checkout';
 import './index.css';
 
