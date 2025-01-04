@@ -7,31 +7,31 @@
     gap: 0.5rem;
     justify-content: space-between;
     position: relative;
+}
 
-    .product-img {
-        width: 100%;
-        transition: scale 0.15s ease;
+.product.item .product-img {
+    width: 100%;
+    transition: scale 0.15s ease;
 
-        &:active {
-            scale: 0.9;
-        }
+    &:active {
+        scale: 0.9;
     }
+}
 
-    .name {
-        width: 100%;
-        text-align: center;
-    }
-    
-    .price {
-        width: 100%;
-        text-align: center;
-        font-weight: bold;
-    }
+.product.item .name {
+    width: 100%;
+    text-align: center;
+}
 
-    .btns-box {
-        width: 100%;
-        display: flex;
-        gap: var(--medium-gap);
-        justify-content: center;
-    }
+.product.item .price {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.product.item .btns-box {
+    width: 100%;
+    display: flex;
+    gap: var(--medium-gap);
+    justify-content: center;
 }
