@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Cart from '../../../features/cart/Cart';
@@ -19,11 +19,12 @@ function Checkout () {
     const navigate = useNavigate();
     const [readyDate, setReadyDate] = useState(null);
     const [readyTime, setReadyTime] = useState(null);
-    const [comment, setComment] = useState('');
+    // const [comment, setComment] = useState('');
     const [address, setAddress] = useState('');
     const deliveryCost = useDeliveryCost(cartAmount);
     const deliveryOption = useSelector(state => state.form.delivery);
 
+    const commentRef = useRef('');
 
     useEffect(() => {
         function handleBackBtnClick () {
@@ -58,7 +59,8 @@ function Checkout () {
                             readyDate      : readyDate,
                             readyTime      : readyTime.value,
                             address        : address,
-                            comment        : comment
+                            // comment        : comment
+                            comment        : commentRef.current
                         },
                     })
                 })
@@ -100,7 +102,7 @@ function Checkout () {
             tg.MainButton.hide();
             tg.MainButton.offClick(handleMainBtnClick);
         };
-    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, comment, address, user])
+    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, address, user])
 
 
     useEffect(() => {
@@ -193,14 +195,15 @@ function Checkout () {
             ></Cart>
             {!isCartEmpty && 
                 <OrderForm 
-                    comment={comment}
+                    // comment={comment}
+                    comment={commentRef}
                     address={address}
                     readyDate={readyDate}
                     readyTime={readyTime}
                     setReadyDate={setReadyDate}
                     setReadyTime={setReadyTime}
                     setAddress={setAddress}
-                    setComment={setComment}
+                    // setComment={setComment}
                 />
             }
         </div>
