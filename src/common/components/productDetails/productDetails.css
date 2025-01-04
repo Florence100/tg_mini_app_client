@@ -25,8 +25,8 @@
     }
 
     .info {
-        width: 100%;
         display: flex;
+        width: 100%;
         flex-direction: column;
         gap: var(--small-gap);
         margin-bottom: 2rem;
