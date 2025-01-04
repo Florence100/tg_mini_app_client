@@ -2,13 +2,11 @@ import { useSelector } from 'react-redux';
 
 
 function useIsCartEmpty() {
-    console.log('---------- useIsCartEmpty ------------');
     const entities = useSelector(state => state.cart.entities);
     return Object.keys(entities).length > 0 ? false : true;
 }
 
 function useCartItems() {
-    console.log('---------- useCartItems ------------');
     const entities = useSelector(state => state.cart.entities);
     const cartItems = Object.values(entities);
 
@@ -16,7 +14,6 @@ function useCartItems() {
 }
 
 function useCartAmount() {
-    console.log('---------- useCartAmount ------------');
     const entities = useSelector(state => state.cart.entities);
     const cartItems = Object.values(entities);
     const cartAmount = cartItems.reduce((currentSum, currentNumber) => {
