@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { registerLocale } from  'react-datepicker';
@@ -24,6 +24,22 @@ export default function DateField(props) {
     const deliveryOption = useSelector(state => state.form.delivery);
     const [calendarClass, setCalendarClass] = useState('fade-in');
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            if (isCalendarOpen) {
+                setIsCalendarOpen(false);
+                setTimeout(() => {
+                    setIsCalendarOpen(true);
+                }, 100);
+            }
+        };
+
+        window.addEventListener('orientationchange', handleOrientationChange);
+        return () => {
+            window.removeEventListener('orientationchange', handleOrientationChange);
+        };
+    }, [isCalendarOpen]);
 
     const getMaxDate = () => { 
         const currentDate = new Date();
@@ -65,6 +81,8 @@ export default function DateField(props) {
                 onCalendarOpen={handleCalendarOpen}
                 onCalendarClose={handleCalendarClose}
                 calendarClassName={calendarClass}
+                popperPlacement='top'
+                open={isCalendarOpen}
             />
             {isCalendarOpen && <div className='datepicker-overlay' onClick={handleCalendarClose}></div>}
         </div>
