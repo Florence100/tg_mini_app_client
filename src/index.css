@@ -83,8 +83,8 @@ body {
   /* Colors: */
     --primary-color: #f8a917;
     --accent-color: #31b545;
-    --primary-color-translucent: rgba(248, 169, 23, 0.3);
-    --accent-color-translucent: rgba(49, 181, 69, 0.3);
+    --primary-color-translucent: rgba(248, 169, 23, 0.4);
+    --accent-color-translucent: rgba(49, 181, 69, 0.4);
 
   /* Sizes: */
     --big-padding: 1.5rem;

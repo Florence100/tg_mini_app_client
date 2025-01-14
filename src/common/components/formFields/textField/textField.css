@@ -7,6 +7,7 @@
     font-size: 1rem;
     display: flex;
     align-items: center;
+    color: var(--tg-theme-text-color);
 
     &::placeholder {
         color: var(--tg-theme-hint-color);

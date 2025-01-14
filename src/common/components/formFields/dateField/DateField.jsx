@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { registerLocale } from  'react-datepicker';
 import { ru } from 'date-fns/locale/ru';
+import Overlay from '../../overlay/Overlay';
 import './dateField.css';
 
 registerLocale('ru', ru);
@@ -25,6 +26,22 @@ export default function DateField(props) {
     const [calendarClass, setCalendarClass] = useState('fade-in');
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            if (isCalendarOpen) {
+                setIsCalendarOpen(false);
+                setTimeout(() => {
+                    setIsCalendarOpen(true);
+                }, 100);
+            }
+        };
+
+        window.addEventListener('orientationchange', handleOrientationChange);
+        return () => {
+            window.removeEventListener('orientationchange', handleOrientationChange);
+        };
+    }, [isCalendarOpen]);
+
     const getMaxDate = () => { 
         const currentDate = new Date();
         const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000; //30 days in ms 
@@ -37,15 +54,17 @@ export default function DateField(props) {
     };
 
     const handleCalendarOpen = () => {
-        console.log('handleCalendarOpen', isCalendarOpen)
         setCalendarClass('fade-in');
         setIsCalendarOpen(true);
     };
 
     const handleCalendarClose = () => {
-        console.log('handleCalendarClose', isCalendarOpen)
         setCalendarClass('fade-out');
         setIsCalendarOpen(false);
+    }
+
+    const handleOverlayClick = () => {
+        handleCalendarClose();
     }
 
     return (
@@ -65,8 +84,10 @@ export default function DateField(props) {
                 onCalendarOpen={handleCalendarOpen}
                 onCalendarClose={handleCalendarClose}
                 calendarClassName={calendarClass}
+                popperPlacement='top'
+                open={isCalendarOpen}
             />
-            {isCalendarOpen && <div className='datepicker-overlay' onClick={handleCalendarClose}></div>}
+            {isCalendarOpen && <Overlay onClick={handleOverlayClick} />}
         </div>
     )
 }

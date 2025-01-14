@@ -3,7 +3,7 @@
 }
 
 .css-2wst4w-option:active {
-    background-color: var(--primary-color-translucent) !important;
+    background-color: var(--tg-theme-secondary-bg-color) !important;
 }
 
 @keyframes fadeIn {
@@ -37,7 +37,6 @@
 }
 
 .readyTime {
-    /* padding: 0 var(--big-padding); */
     padding: 0;
     display: flex;
     flex-direction: column;
