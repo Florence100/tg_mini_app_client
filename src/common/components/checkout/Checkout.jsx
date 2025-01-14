@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Cart from '../../../features/cart/Cart';
@@ -19,7 +19,6 @@ function Checkout () {
     const navigate = useNavigate();
     const [readyDate, setReadyDate] = useState(null);
     const [readyTime, setReadyTime] = useState(null);
-    // const [comment, setComment] = useState('');
     const [address, setAddress] = useState('');
     const deliveryCost = useDeliveryCost(cartAmount);
     const deliveryOption = useSelector(state => state.form.delivery);
@@ -41,116 +40,132 @@ function Checkout () {
     }, [tg, navigate])
 
 
-    useEffect(() => {
-        const openPaymentSystem = async () => {
-            console.log('Payment system will be open');
-            try {
-                const response = await fetch(`${serverUrl}/create-invoice`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+    const openPaymentSystem = useCallback(async () => {
+        console.log('Payment system will be open');
+        try {
+            const response = await fetch(`${serverUrl}/create-invoice`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    paymentPayload : {
+                        userId         : user?.id,
+                        cartItems      : cartItems,
+                        deliveryOption : deliveryOption,
+                        deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
+                        readyDate      : readyDate,
+                        readyTime      : readyTime.value,
+                        address        : address,
+                        comment        : commentRef.current
                     },
-                    body: JSON.stringify({
-                        paymentPayload : {
-                            userId         : user.id,
-                            cartItems      : cartItems,
-                            deliveryOption : deliveryOption,
-                            deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
-                            readyDate      : readyDate,
-                            readyTime      : readyTime.value,
-                            address        : address,
-                            // comment        : comment
-                            comment        : commentRef.current
-                        },
-                    })
                 })
-                
-                const data = await response.json();
-                tg.openInvoice(data.invoiceLink);
-            } catch (error) {
-                console.error(error);
-                //Добавить навигацию на страницу ошибки
+            })
+            
+            const data = await response.json();
+            tg.openInvoice(data.invoiceLink);
+        } catch (error) {
+            console.error(error);
+            if (tg.isVersionAtLeast('6.2')) {
+                tg.showPopup({ 
+                    message: 'Произошла ошибка при создании счета. Попробуйте еще раз.',
+                    buttons: [{
+                        text: 'Хорошо, спасибо',
+                    }]
+                })
+            } else {
+                alert('Произошла ошибка при создании счета. Попробуйте еще раз.');
             }
+        } finally {
+            tg.MainButton.hideProgress();
         }
+    }, [address, cartItems, deliveryCost, deliveryOption, readyDate, readyTime, tg, user?.id])
 
-        const handleMainBtnClick = () => {
-            openPaymentSystem();
-        }
 
-        if ( !isCartEmpty && readyDate && readyTime ) {
+    const handleMainBtnClick = useCallback(() => {
+        openPaymentSystem();
+        tg.MainButton.showProgress();
+    }, [openPaymentSystem, tg.MainButton]);
+
+
+    const mainButtonParams = useMemo(() => {
+        if (!isCartEmpty && readyDate && readyTime) {
             if (deliveryOption === 'pickup') {
-                tg.MainButton
-                    .setParams({
-                        color: '#31b545',
-                        text: `Оплатить ${cartAmount.toFixed(2)} руб.`,
-                        hasShineEffect: true
-                    })
-                    .show();
-                tg.MainButton.onClick(handleMainBtnClick);
+                return {
+                    color: '#31b545',
+                    text: `Оплатить ${cartAmount.toFixed(2)} руб.`,
+                    hasShineEffect: true };
             } else if (deliveryOption === 'delivery' && address) {
-                tg.MainButton
-                    .setParams({
-                        color: '#31b545',
-                        text: `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`,
-                        hasShineEffect: true
-                    })
-                    .show();
-                tg.MainButton.onClick(handleMainBtnClick);
+                return {
+                    color: '#31b545',
+                    text: `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`,
+                    hasShineEffect: true
+                };
             }
         }
-        return () => {
+        return null;
+    }, [address, cartAmount, deliveryCost, deliveryOption, isCartEmpty, readyDate, readyTime]);
+
+
+    useEffect(() => {
+        if (mainButtonParams) {
+            tg.MainButton.setParams(mainButtonParams).show();
+            tg.MainButton.onClick(handleMainBtnClick);
+        } else {
             tg.MainButton.hide();
             tg.MainButton.offClick(handleMainBtnClick);
+        }
+    }, [mainButtonParams, handleMainBtnClick, tg.MainButton]);
+
+
+    const invoiceDelete = useCallback(async (slug, status) => {
+        try {
+            await fetch(`${serverUrl}/delete-invoice`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    slug: slug,
+                    status: status,
+                    chatId: chatId ? chatId : user?.id,
+                })
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }, [chatId, user?.id])
+
+
+    const onInvoiceCloseHandler = useCallback((eventType, eventData) => {
+        if (eventType === 'invoice_closed') {
+            console.log('eventData: ', eventData)
+            if (eventData.status === 'failed' || eventData.status === 'cancelled') {
+                invoiceDelete(eventData.slug, eventData.status);
+            }
+            if (eventData.status === 'paid') {
+                console.log('Successful payment. Mini app is closing');
+                invoiceDelete(eventData.slug, eventData.status).then(() => {
+                    tg.close();
+                });
+            }
+        }
+    }, [invoiceDelete, tg])
+
+
+    const wrapReceiveEvent = useCallback((originalFunction) => {
+        return function(eventType, eventData) {
+            if (eventType === 'invoice_closed') {
+                onInvoiceCloseHandler(eventType, eventData);
+            }
+            if (originalFunction) {
+                originalFunction(eventType, eventData);
+            }
         };
-    }, [isCartEmpty, cartAmount, deliveryOption, deliveryCost, readyDate, readyTime, tg, cartItems, address, user])
+    }, [onInvoiceCloseHandler])
 
 
     useEffect(() => {
-        const invoiceDelete = async (slug, status) => {
-            try {
-                await fetch(`${serverUrl}/delete-invoice`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        slug: slug,
-                        status: status,
-                        chatId: chatId ? chatId : user?.id,
-                    })
-                })
-            } catch (error) {
-                console.error(error);
-                //Добавить навигацию на страницу ошибки
-            }
-        }
-
-        const onInvoiceCloseHandler = (eventType, eventData) => {
-            if (eventType === 'invoice_closed') {
-                console.log('eventData: ', eventData)
-                if (eventData.status === 'failed' || eventData.status === 'cancelled') {
-                    invoiceDelete(eventData.slug, eventData.status);
-                }
-                if (eventData.status === 'paid') {
-                    console.log('Successful payment. Mini app is closing');
-                    invoiceDelete(eventData.slug, eventData.status).then(() => {
-                        tg.close();
-                    });
-                }
-            }
-        }
-        
-        const wrapReceiveEvent = (originalFunction) => {
-            return function(eventType, eventData) {
-                if (eventType === 'invoice_closed') {
-                    onInvoiceCloseHandler(eventType, eventData);
-                }
-                if (originalFunction) {
-                    originalFunction(eventType, eventData);
-                }
-            };
-        }
-
         // Обработка собственных событий Telegram
         let originalReceiveEvent;
 
@@ -182,7 +197,7 @@ function Checkout () {
                 window.TelegramGameProxy_receiveEvent = originalReceiveEvent;
             }
         };
-    }, [tg, chatId, user])
+    }, [tg, chatId, user, invoiceDelete, onInvoiceCloseHandler, wrapReceiveEvent])
 
 
     return (
@@ -195,7 +210,6 @@ function Checkout () {
             ></Cart>
             {!isCartEmpty && 
                 <OrderForm 
-                    // comment={comment}
                     comment={commentRef}
                     address={address}
                     readyDate={readyDate}
@@ -203,7 +217,6 @@ function Checkout () {
                     setReadyDate={setReadyDate}
                     setReadyTime={setReadyTime}
                     setAddress={setAddress}
-                    // setComment={setComment}
                 />
             }
         </div>

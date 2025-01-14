@@ -41,8 +41,6 @@ export default function OrderForm (props) {
             }
             <CommentField 
                 comment={props.comment}
-                // comment={props.comment}
-                // setComment={props.setComment}
             />
         </form>
     )

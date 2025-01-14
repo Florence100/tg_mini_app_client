@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { registerLocale } from  'react-datepicker';
 import { ru } from 'date-fns/locale/ru';
+import Overlay from '../../overlay/Overlay';
 import './dateField.css';
 
 registerLocale('ru', ru);
@@ -53,15 +54,17 @@ export default function DateField(props) {
     };
 
     const handleCalendarOpen = () => {
-        console.log('handleCalendarOpen', isCalendarOpen)
         setCalendarClass('fade-in');
         setIsCalendarOpen(true);
     };
 
     const handleCalendarClose = () => {
-        console.log('handleCalendarClose', isCalendarOpen)
         setCalendarClass('fade-out');
         setIsCalendarOpen(false);
+    }
+
+    const handleOverlayClick = () => {
+        handleCalendarClose();
     }
 
     return (
@@ -84,7 +87,7 @@ export default function DateField(props) {
                 popperPlacement='top'
                 open={isCalendarOpen}
             />
-            {isCalendarOpen && <div className='datepicker-overlay' onClick={handleCalendarClose}></div>}
+            {isCalendarOpen && <Overlay onClick={handleOverlayClick} />}
         </div>
     )
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select, { components } from 'react-select';
 import { useSelector } from 'react-redux';
+import Overlay from '../../overlay/Overlay';
 import './timeField.css';
 
 
@@ -28,6 +29,11 @@ export default function TimeField(props) {
         setIsMenuOpen(false);
     }
 
+    const handleOverlayClick = (e) => {
+        e.stopPropagation();
+        setIsMenuOpen(false);
+    }
+
     const CustomInput = (props) => (
         <components.Input 
             {...props} 
@@ -51,6 +57,7 @@ export default function TimeField(props) {
                 openMenuOnClick={true}
                 onFocus={() => console.log('Focus')}
                 onKeyDown={() => console.log('Key Down')}
+                isDisabled={props.readyDate ? false : true}
                 isOptionDisabled={(option) => {
                     const currentDate = new Date();
                     const selectedDate = new Date(props.readyDate);
@@ -72,13 +79,15 @@ export default function TimeField(props) {
                         border: 0,
                         borderBottom: '1px solid var(--tg-theme-section-separator-color)',
                         boxShadow: 'none',
-                        backgroundColor: 'var(--tg-theme-bg-color)',
+                        backgroundColor: 'var(--tg-theme-bg-color)'
                     }),
                     menu: (baseStyles, state) => ({
                         ...baseStyles,
                         borderRadius: 0,
                         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
                         border: '1px solid var(--tg-theme-section-separator-color)',
+                        zIndex: 1000,
+                        backgroundColor: 'var(--tg-theme-bg-color)',
                     }),
                     option: (baseStyles, state) => ({
                         ...baseStyles,
@@ -93,6 +102,10 @@ export default function TimeField(props) {
                         ...baseStyles,
                         margin: 0,
                         padding: 0,
+                    }),
+                    singleValue: (baseStyles, state) => ({
+                        ...baseStyles,
+                        color: 'var(--tg-theme-text-color)'
                     }),
                     placeholder: (baseStyles, states) => ({
                         ...baseStyles,
@@ -112,6 +125,8 @@ export default function TimeField(props) {
                     })
                 }}
             />
+            {isMenuOpen && <Overlay onClick={handleOverlayClick} />}
+            {/* {isMenuOpen && <div className='datepicker-overlay' onClick={handleSelectClose}></div>} */}
         </div>
     )
 }

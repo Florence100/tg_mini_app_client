@@ -5,9 +5,7 @@ import TextField from '../textField/TextField';
 export default function CommentField(props) {
     const handleCommentChange = (event) => {
         const sanitizedValue = DOMPurify.sanitize(event.target.value);
-        // props.setComment(sanitizedValue);
         props.comment.current = sanitizedValue;
-
     }
 
     return (
