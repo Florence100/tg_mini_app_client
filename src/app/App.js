@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import useTelegram from '../common/hooks/useTelegram';
+import useTelegram from '../hooks/useTelegram';
 import './app.css';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
 
     useEffect(() => {
         tg.ready();
-    }, [tg])
+    }, [tg]);
 
     return (
         <div className='App'>

@@ -1,0 +1,30 @@
+.product-card {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+    gap: 0.5rem;
+    justify-content: space-between;
+    position: relative;
+}
+
+.product-card .img {
+    width: 100%;
+    transition: scale 0.15s ease;
+
+    &:active {
+        scale: 0.9;
+    }
+}
+
+.product-card .name {
+    width: 100%;
+    text-align: center;
+}
+
+.product-card .price {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}

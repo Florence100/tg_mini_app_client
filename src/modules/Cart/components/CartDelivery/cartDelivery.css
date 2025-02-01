@@ -1,0 +1,29 @@
+.cart-delivery {
+    padding: var(--medium-padding) var(--big-padding);
+    display: flex;
+    justify-content: space-between;
+}
+
+/* CSSTransition Styles */
+.cart-delivery-enter {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.cart-delivery-enter-active {
+    opacity: 1;
+    max-height: 44px;
+    transition: opacity 100ms ease 25ms, max-height 100ms ease;
+} 
+
+.cart-delivery-exit {
+    opacity: 1;
+    max-height: 44px;
+}
+
+.cart-delivery-exit-active {
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 100ms ease, max-height 100ms ease 25ms;
+}

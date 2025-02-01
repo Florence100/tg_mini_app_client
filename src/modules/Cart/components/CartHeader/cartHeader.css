@@ -1,0 +1,12 @@
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--big-padding);
+}
+
+.cart-header .header-edit {
+    color: var(--accent-color);
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: transparent;
+}

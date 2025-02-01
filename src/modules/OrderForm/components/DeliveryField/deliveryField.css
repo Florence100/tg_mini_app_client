@@ -1,0 +1,10 @@
+.delivery {
+    padding: 0 var(--big-padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--medium-gap);
+}
+
+.delivery .delivery-info {
+    font-size: 0.875rem;
+}

@@ -1,0 +1,6 @@
+.summary {
+    padding: var(--medium-padding) var(--big-padding);
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
