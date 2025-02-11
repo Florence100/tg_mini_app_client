@@ -1,11 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useCartStatus';
 import ProductCard from '../ProductCard/ProductCard';
-// import ProductPreview from 'components/ProductPreview/ProductPreview';
-// import ProductControl from 'components/ProductControl/ProductControl';
-import products from 'data/products';
+import getProducts from './fetch/getProducts';
 import './catalogPage.css';
 
 
@@ -13,6 +11,16 @@ export default function ProductCatalog() {
     const { tg } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const productsData = await getProducts();
+            setProducts(productsData);
+            console.log('productsData: ', productsData);
+        }
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const handleMainBtnClick = () => {
@@ -45,7 +53,7 @@ export default function ProductCatalog() {
     return (
         <div className='catalog-page'>
             {
-                products.map((item) => (
+                products?.map((item) => (
                     <ProductCard product={item} key={item.id} />
                 ))
             }

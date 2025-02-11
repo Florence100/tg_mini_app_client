@@ -2,7 +2,7 @@ import { SERVER_URL } from 'consts/consts';
 
 async function deleteInvoice(slug, status, chatId, user) {
     try {
-        await fetch(`${SERVER_URL}/delete-invoice`, {
+        await fetch(`${SERVER_URL}/invoice/delete`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

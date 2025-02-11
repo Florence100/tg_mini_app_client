@@ -6,7 +6,8 @@ import { createSlice } from '@reduxjs/toolkit';
 //             id: 1,
 //             count: 1,
 //             price: 5.2,
-//             name: 'burger'
+//             name: 'burger',
+//             img: '/uploads/example.png
 //         },
 //         ...
 //     },
@@ -24,7 +25,8 @@ export const cartSlice = createSlice({
                 id: productItem.id,
                 count: 1,
                 price: productItem.price,
-                name: productItem.name
+                name: productItem.name,
+                img: productItem.img_path
             }
         },
         remove: (state, action) => {

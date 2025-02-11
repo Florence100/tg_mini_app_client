@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import products from 'data/products';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useCartStatus';
 import ProductDescription from '../ProductDescription/ProductDescription';
 import ProductControl from 'components/ProductControl/ProductControl';
+import getOneProduct from './fetch/getOneProduct';
 import './productPage.css';
 
 
@@ -17,7 +17,16 @@ export default function ProductPage() {
     const { tg } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
+    const productId = useLoaderData();
+    const [product, setProduct] = useState();
 
+    useEffect(() => {
+        async function fetchData() {
+            const [productData] = await getOneProduct(productId);
+            setProduct(productData);
+        }
+        fetchData();
+    }, [productId]);
 
     useEffect(() => {
         const handleMainBtnClick = () => {
@@ -43,7 +52,6 @@ export default function ProductPage() {
         };
     }, [isCartEmpty, tg, navigate])
 
-
     useEffect(() => {
         tg.BackButton.show();
         tg.BackButton.onClick(() => {
@@ -52,22 +60,17 @@ export default function ProductPage() {
         tg.MainButton.setText('Перейти в корзину');
     }, [tg, navigate])
 
-
-    const productId = useLoaderData();
-    //feat: заменить обращением к БД!
-    const productArr = products.filter(function(product) {
-        return product.id === Number(productId);
-    })
-    const product = productArr[0];
-
-
     return (
         <div className='product-page'>
-            <ProductDescription product={product} />
-            <ProductControl
-                product={product}
-                label={'Добавлено в корзину:'}
-            />
+            { product && 
+                <ProductDescription product={product} />
+            }
+            { product && 
+                <ProductControl
+                    product={product}
+                    label={'Добавлено в корзину:'}
+                />
+            }
         </div>
     )
 }

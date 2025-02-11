@@ -8,7 +8,7 @@ import CommentField from '../CommentField/CommentField';
 import useDeliveryCost from 'hooks/useDeliveryCost';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty, useCartItems, useCartAmount } from 'hooks/useCartStatus';
-import createInvoice from './fetch/createInvoice';
+import addInvoice from './fetch/addInvoice';
 import deleteInvoice from './fetch/deleteInvoice';
 import 'react-datepicker/dist/react-datepicker.css';
 import './orderForm.css';
@@ -35,7 +35,7 @@ export default function OrderForm () {
     const openPaymentSystem = useCallback(async (payload) => {
         console.log('Payment system will be open');
         try {
-            const response = await createInvoice(payload);
+            const response = await addInvoice(payload);
             const data = await response.json();
             tg.openInvoice(data.invoiceLink);
         } catch (error) {

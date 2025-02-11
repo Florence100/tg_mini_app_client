@@ -3,7 +3,7 @@
     width: 100%;
     max-width: var(--max-width-content);
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     gap: var(--big-gap);
     margin: 0 auto;
