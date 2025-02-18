@@ -14,7 +14,7 @@ function productPageLoader({ params }) {
 }
 
 export default function ProductPage() {
-    const { tg } = useTelegram();
+    const { tg, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
     const productId = useLoaderData();
@@ -22,11 +22,21 @@ export default function ProductPage() {
 
     useEffect(() => {
         async function fetchData() {
-            const [productData] = await getOneProduct(productId);
-            setProduct(productData);
+            const data = await getOneProduct(productId, initData);
+            console.log(data)
+            if (data.message) {
+                tg.showPopup({
+                    message: data.message,
+                    buttons: [{
+                        text: 'Хорошо, спасибо',
+                    }]
+                })
+                return;
+            }
+            setProduct(...data);
         }
         fetchData();
-    }, [productId]);
+    }, [initData, productId, tg]);
 
     useEffect(() => {
         const handleMainBtnClick = () => {

@@ -7,7 +7,7 @@ import { useIsCartEmpty } from 'hooks/useCartStatus';
 import './checkoutPage.css';
 
 
-function Checkout () {
+function CheckoutPage () {
     const { tg } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
@@ -35,4 +35,4 @@ function Checkout () {
     )
 }
 
-export default Checkout;
+export default CheckoutPage;

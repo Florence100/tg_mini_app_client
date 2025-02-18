@@ -21,7 +21,7 @@ export default function OrderForm () {
     const datePickerRef = useRef(null);
     const commentRef = useRef('');
 
-    const { tg, user, chatId } = useTelegram();
+    const { tg, user, chatId, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const cartItems = useCartItems();
     const cartAmount = useCartAmount();
@@ -35,25 +35,39 @@ export default function OrderForm () {
     const openPaymentSystem = useCallback(async (payload) => {
         console.log('Payment system will be open');
         try {
-            const response = await addInvoice(payload);
+            const response = await addInvoice(payload, initData);
             const data = await response.json();
-            tg.openInvoice(data.invoiceLink);
-        } catch (error) {
-            console.error(error);
-            if (tg.isVersionAtLeast('6.2')) {
+            if (data.message) {
+                tg.showPopup({
+                    message: data.message,
+                    buttons: [{
+                        text: 'Хорошо, спасибо',
+                    }]
+                })
+            }
+            if (data.invoiceLink) {
+                tg.openInvoice(data.invoiceLink);
+            }
+        } catch (e) {
+            if (!tg.isVersionAtLeast('6.2')) {
                 tg.showPopup({ 
-                    message: 'Произошла ошибка при создании счета. Попробуйте еще раз.',
+                    message: 'Пожалуйста, обновите версию Telegram до версии 6.2 и выше',
                     buttons: [{
                         text: 'Хорошо, спасибо',
                     }]
                 })
             } else {
-                alert('Произошла ошибка при создании счета. Попробуйте еще раз.');
+                tg.showPopup({ 
+                    message: 'Произошла ошибка при создании счета. Пожалуйста, попробуйте еще раз.',
+                    buttons: [{
+                        text: 'Хорошо, спасибо',
+                    }]
+                })
             }
         } finally {
             tg.MainButton.hideProgress();
         }
-    }, [tg]);
+    }, [initData, tg]);
 
 
     const handleMainBtnClick = useCallback(() => {
@@ -113,16 +127,16 @@ export default function OrderForm () {
         if (eventType === 'invoice_closed') {
             console.log('eventData: ', eventData)
             if (eventData.status === 'failed' || eventData.status === 'cancelled') {
-                deleteInvoice(eventData.slug, eventData.status, chatId, user);
+                deleteInvoice(eventData.slug, eventData.status, chatId, user, initData);
             }
             if (eventData.status === 'paid') {
                 console.log('Successful payment. Mini app is closing');
-                deleteInvoice(eventData.slug, eventData.status, chatId, user).then(() => {
+                deleteInvoice(eventData.slug, eventData.status, chatId, user, initData).then(() => {
                     tg.close();
                 });
             }
         }
-    }, [tg, chatId, user]);
+    }, [tg, chatId, user, initData]);
 
 
     const wrapReceiveEvent = useCallback((originalFunction) => {

@@ -4,23 +4,36 @@ import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useCartStatus';
 import ProductCard from '../ProductCard/ProductCard';
 import getProducts from './fetch/getProducts';
+// import authorization from './fetch/authorization';
 import './catalogPage.css';
 
 
-export default function ProductCatalog() {
-    const { tg } = useTelegram();
+export default function CatalogPage() {
+    const { tg, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
 
+    // useEffect(() => {
+    //     authorization(initData);
+    // }, [initData]);
+
     useEffect(() => {
         async function fetchData() {
-            const productsData = await getProducts();
-            setProducts(productsData);
-            console.log('productsData: ', productsData);
+            const data = await getProducts(initData);
+            if (data.message) {
+                tg.showPopup({
+                    message: data.message,
+                    buttons: [{
+                        text: 'Хорошо, спасибо',
+                    }]
+                })
+                return;
+            }
+            setProducts(data);
         }
         fetchData();
-    }, []);
+    }, [initData, tg]);
 
     useEffect(() => {
         const handleMainBtnClick = () => {
@@ -52,7 +65,7 @@ export default function ProductCatalog() {
 
     return (
         <div className='catalog-page'>
-            {
+            { products.length > 0 &&
                 products?.map((item) => (
                     <ProductCard product={item} key={item.id} />
                 ))

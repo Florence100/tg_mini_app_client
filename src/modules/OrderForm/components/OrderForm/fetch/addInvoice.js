@@ -1,18 +1,22 @@
 import { SERVER_URL } from 'consts/consts';
 
-async function createInvoice(payload) {
-    console.log('payload: ', payload)
-    const response = await fetch(`${SERVER_URL}/invoice/add`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            paymentPayload : payload,
+async function addInvoice(payload, initData) {
+    console.log('initData: ', initData);
+    try {
+        const response = await fetch(`${SERVER_URL}/invoice/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `tma ${initData}`
+            },
+            body: JSON.stringify({
+                paymentPayload : payload,
+            })
         })
-    })
-
-    return response;
+        return response;
+    } catch (e) {
+        throw new Error(e);
+    }
 }
 
-export default createInvoice;
+export default addInvoice;
