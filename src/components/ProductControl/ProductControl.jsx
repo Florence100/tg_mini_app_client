@@ -1,9 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { add, increment, decrement, remove } from 'modules/Cart/index';
+import { add, increment, decrement, remove } from 'app/store';
 import Button from 'UI/Button/Button';
 import Counter from 'UI/Counter/Counter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import addProduct from './fetch/addProduct';
+import removeProduct from './fetch/removeProduct';
+import incrProduct from './fetch/incrProduct';
+import decrProduct from './fetch/decrProduct';
+import useTelegram from 'hooks/useTelegram';
 import './productControl.css';
 
 
@@ -11,6 +16,7 @@ export default function ProductControl(props) {
     const product = props.product;
     const productId = product.id;
     const productCount = useSelector(state => state.cart.entities[productId]?.count) || 0;
+    const { initData } = useTelegram();
 
     const label = props.label;
 
@@ -18,17 +24,21 @@ export default function ProductControl(props) {
 
     const handleAddClick = () => {
         dispatch(add(product));
+        addProduct(initData, productId);
     }
 
     const handleIncrClick = () => {
         dispatch(increment(product));
+        incrProduct(initData, productId);
     }
 
     const handleDecrClick = () => {
         if (productCount > 1) {
             dispatch(decrement(product));
+            decrProduct(initData, productId);
         } else {
             dispatch(remove(product));
+            removeProduct(initData, productId);
         }
     }
 

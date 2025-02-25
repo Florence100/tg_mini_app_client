@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from 'app/App';
-import store from 'app/store';
+import { store } from 'app/store';
 import CatalogPage from 'pages/CatalogPage/components/CatalogPage/CatalogPage';
 import ProductPage, { productPageLoader } from 'pages/ProductPage/components/ProductPage/ProductPage';
 import ErrorPage from 'pages/ErrorPage/components/ErrorPage/ErrorPage';

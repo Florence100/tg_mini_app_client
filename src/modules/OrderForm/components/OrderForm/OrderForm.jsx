@@ -1,32 +1,30 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import DeliveryField from '../DeliveryField/DeliveryField';
 import DateField from '../DateField/DateField';
 import TimeField from '../TimeField/TimeField';
 import AddressField from '../AddressField/AddressField';
 import CommentField from '../CommentField/CommentField';
-import useDeliveryCost from 'hooks/useDeliveryCost';
 import useTelegram from 'hooks/useTelegram';
-import { useIsCartEmpty, useCartItems, useCartAmount } from 'hooks/useCartStatus';
+import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
 import addInvoice from './fetch/addInvoice';
 import deleteInvoice from './fetch/deleteInvoice';
+import { clearCart } from 'app/store';
+import clearBasketFetch from './fetch/clearBasket';
 import 'react-datepicker/dist/react-datepicker.css';
 import './orderForm.css';
 
 
-export default function OrderForm () {
+export default function OrderForm ({ cartProducts, deliveryCost, cartAmount }) {
     const [readyDate, setReadyDate] = useState(null);
     const [readyTime, setReadyTime] = useState(null);
     const [address, setAddress] = useState('');
     const datePickerRef = useRef(null);
     const commentRef = useRef('');
-
     const { tg, user, chatId, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
-    const cartItems = useCartItems();
-    const cartAmount = useCartAmount();
-    const deliveryCost = useDeliveryCost(cartAmount);
     const deliveryOption = useSelector(state => state.form.delivery);
+    const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -73,7 +71,7 @@ export default function OrderForm () {
     const handleMainBtnClick = useCallback(() => {
         const payload = {
             userId         : user?.id || chatId,
-            cartItems      : cartItems,
+            cartItems      : cartProducts,
             deliveryOption : deliveryOption,
             deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
             readyDate      : readyDate,
@@ -84,7 +82,18 @@ export default function OrderForm () {
         console.log('payload:', payload);
         openPaymentSystem(payload);
         tg.MainButton.showProgress();
-    }, [address, cartItems, chatId, deliveryCost, deliveryOption, openPaymentSystem, readyDate, readyTime, tg, user?.id]);
+    }, [
+        address,
+        cartProducts,
+        chatId,
+        deliveryCost,
+        deliveryOption,
+        openPaymentSystem,
+        readyDate,
+        readyTime,
+        tg,
+        user?.id
+    ]);
 
 
     const mainButtonParams = useMemo(() => {
@@ -131,12 +140,15 @@ export default function OrderForm () {
             }
             if (eventData.status === 'paid') {
                 console.log('Successful payment. Mini app is closing');
-                deleteInvoice(eventData.slug, eventData.status, chatId, user, initData).then(() => {
-                    tg.close();
-                });
+                deleteInvoice(eventData.slug, eventData.status, chatId, user, initData);
+                clearBasketFetch(initData)
+                    .then(() => {
+                        dispatch(clearCart());
+                        tg.close();
+                    })
             }
         }
-    }, [tg, chatId, user, initData]);
+    }, [chatId, user, initData, dispatch, tg]);
 
 
     const wrapReceiveEvent = useCallback((originalFunction) => {

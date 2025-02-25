@@ -3,11 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // state = {
 //     entities: {
 //         1: {
-//             id: 1,
 //             count: 1,
-//             price: 5.2,
-//             name: 'burger',
-//             img: '/uploads/example.png
 //         },
 //         ...
 //     },
@@ -22,11 +18,7 @@ export const cartSlice = createSlice({
         add: (state, action) => {
             const productItem = action.payload;
             state.entities[productItem.id] = {
-                id: productItem.id,
                 count: 1,
-                price: productItem.price,
-                name: productItem.name,
-                img: productItem.img_path
             }
         },
         remove: (state, action) => {
@@ -41,6 +33,13 @@ export const cartSlice = createSlice({
             const productItem = action.payload;
             state.entities[productItem.id].count += 1;
         },
+        setCart: (state, action) => {
+            const items = action.payload;
+            state.entities = items.reduce((acc, item) => {
+                acc[item.id] = { count: item.count };
+                return acc;
+            }, {});
+        },
         clearCart: (state, action) => {
             state.entities = {};
         }
@@ -48,6 +47,6 @@ export const cartSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { add, remove, decrement, increment, clearCart } = cartSlice.actions;
+export const { add, remove, decrement, increment, clearCart, setCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

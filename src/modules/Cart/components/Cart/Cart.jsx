@@ -3,18 +3,14 @@ import CartHeader from '../CartHeader/CartHeader';
 import Order from '../Order/Order';
 import CartDelivery from '../CartDelivery/CartDelivery';
 import CartSummary from '../CartSummary/CartSummary';
-import useDeliveryCost from 'hooks/useDeliveryCost';
-import { useIsCartEmpty, useCartItems, useCartAmount } from 'hooks/useCartStatus';
+import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
 import { CSSTransition } from 'react-transition-group';
 import './cart.css';
 
 
-export default function Cart() {
+export default function Cart({ cartProducts, deliveryCost, cartAmount }) {
     const deliveryOption = useSelector(state => state.form.delivery);
     const isCartEmpty = useIsCartEmpty();
-    const cartItems = useCartItems();
-    const cartAmount = useCartAmount();
-    const deliveryCost = useDeliveryCost(cartAmount);
 
     return (
         <div className='cart'>
@@ -22,7 +18,7 @@ export default function Cart() {
                 <CartHeader />
                 <Order
                     isCartEmpty={isCartEmpty}
-                    cartItems={cartItems}
+                    cartProducts={cartProducts}
                 />
                 <CSSTransition 
                     in={!isCartEmpty && deliveryOption === 'delivery'}

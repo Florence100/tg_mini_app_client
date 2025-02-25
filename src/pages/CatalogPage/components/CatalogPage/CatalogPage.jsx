@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
-import { useIsCartEmpty } from 'hooks/useCartStatus';
+import useCompareCartData from 'hooks/useCompareCartData';
+import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
 import ProductCard from '../ProductCard/ProductCard';
 import getProducts from './fetch/getProducts';
-// import authorization from './fetch/authorization';
+import authorization from './fetch/authorization';
 import './catalogPage.css';
 
 
@@ -13,10 +14,11 @@ export default function CatalogPage() {
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
+    useCompareCartData();
 
-    // useEffect(() => {
-    //     authorization(initData);
-    // }, [initData]);
+    useEffect(() => {
+        authorization(initData);
+    }, [initData, tg]);
 
     useEffect(() => {
         async function fetchData() {

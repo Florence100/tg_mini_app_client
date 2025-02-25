@@ -4,7 +4,8 @@ async function authorization(initData) {
     const response = await fetch(`${SERVER_URL}/user/auth`, {
         method: 'POST',
         headers: {
-            Authorization: `tma ${initData}`
+            'Content-Type': 'application/json',
+            'Authorization': `tma ${initData}`
         }
     })
 

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { cartReduser } from '../modules/Cart/index';
-import { formReduser } from '../modules/OrderForm/index';
+import { cartReduser, add, remove, decrement, increment, clearCart, setCart } from 'modules/Cart/index';
+import { formReduser } from 'modules/OrderForm/index';
 
 const store = configureStore({
     reducer: {
@@ -9,4 +9,12 @@ const store = configureStore({
     }
 })
 
-export default store;
+export {
+    store,
+    clearCart,
+    add,
+    remove,
+    decrement,
+    increment,
+    setCart
+};

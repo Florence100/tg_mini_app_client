@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
-import { useIsCartEmpty } from 'hooks/useCartStatus';
+import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
+import useCompareCartData from 'hooks/useCompareCartData';
 import ProductDescription from '../ProductDescription/ProductDescription';
 import ProductControl from 'components/ProductControl/ProductControl';
 import getOneProduct from './fetch/getOneProduct';
@@ -19,23 +20,23 @@ export default function ProductPage() {
     const navigate = useNavigate();
     const productId = useLoaderData();
     const [product, setProduct] = useState();
+    useCompareCartData();
 
     useEffect(() => {
-        async function fetchData() {
-            const data = await getOneProduct(productId, initData);
-            console.log(data)
-            if (data.message) {
-                tg.showPopup({
-                    message: data.message,
-                    buttons: [{
-                        text: 'Хорошо, спасибо',
-                    }]
-                })
-                return;
-            }
-            setProduct(...data);
-        }
-        fetchData();
+        getOneProduct(productId, initData)
+            .then((data) => {
+                if (data.message) {
+                    tg.showPopup({
+                        message: data.message,
+                        buttons: [{
+                            text: 'Хорошо, спасибо',
+                        }]
+                    })
+                    return;
+                }
+                console.log('data: ', data)
+                setProduct(...data);
+        })
     }, [initData, productId, tg]);
 
     useEffect(() => {
@@ -65,7 +66,7 @@ export default function ProductPage() {
     useEffect(() => {
         tg.BackButton.show();
         tg.BackButton.onClick(() => {
-            navigate(-1);
+            navigate('/');
         })
         tg.MainButton.setText('Перейти в корзину');
     }, [tg, navigate])
