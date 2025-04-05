@@ -1,10 +1,11 @@
 .catalog-page {
-    padding: var(--big-padding);
+    padding: 0 var(--small-padding);
+    padding-bottom: var(--small-padding);
     width: 100%;
     max-width: var(--max-width-content);
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    gap: var(--big-gap);
+    gap: var(--big-gap) var(--small-gap);
     margin: 0 auto;
 }

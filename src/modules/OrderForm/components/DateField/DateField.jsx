@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { registerLocale } from  'react-datepicker';
 import { ru } from 'date-fns/locale/ru';
 import Overlay from 'components/Overlay/Overlay';
 import Header from 'UI/Header/Header';
 import getMaxDate from '../../helpers/getMaxDate';
+import { readyDateChange, readyTimeChange } from '../../store/formSlice';
+import moment from 'moment-timezone';
 import './dateField.css';
 
 registerLocale('ru', ru);
-
 
 const CustomDateInput = React.forwardRef(({ value, onClick }, ref) => (
     <input
@@ -22,11 +23,13 @@ const CustomDateInput = React.forwardRef(({ value, onClick }, ref) => (
     />
 ));
 
-
-export default function DateField(props) {
+export default function DateField() {
+    console.log('---DateField---')
+    const dispatch = useDispatch();
     const deliveryOption = useSelector(state => state.form.delivery);
     const [calendarClass, setCalendarClass] = useState('fade-in');
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const readyDate = useSelector(state => state.form.readyDate);
 
     useEffect(() => {
         const handleOrientationChange = () => {
@@ -39,14 +42,16 @@ export default function DateField(props) {
         };
 
         window.addEventListener('orientationchange', handleOrientationChange);
+
         return () => {
             window.removeEventListener('orientationchange', handleOrientationChange);
         };
     }, [isCalendarOpen]);
 
     const handleDateChange = (date) => {
-        props.setReadyDate(date);
-        props.setReadyTime(null);
+        const formattedReadyDate = moment.tz(date, 'Europe/Moscow').format('YYYY-MM-DD');
+        dispatch(readyDateChange(formattedReadyDate));
+        dispatch(readyTimeChange(null));
     };
 
     const handleCalendarOpen = () => {
@@ -67,8 +72,7 @@ export default function DateField(props) {
         <div className='readyDate'>
             <Header text={ deliveryOption === 'pickup' ? 'Дата самовывоза:' : 'Дата доставки:' }/>
             <DatePicker
-                ref={props.datePickerRef}
-                selected={props.readyDate}
+                selected={readyDate}
                 onChange={handleDateChange}
                 minDate={new Date()}
                 maxDate={getMaxDate()}
@@ -78,7 +82,7 @@ export default function DateField(props) {
                 onCalendarOpen={handleCalendarOpen}
                 onCalendarClose={handleCalendarClose}
                 calendarClassName={calendarClass}
-                popperPlacement='top'
+                // popperPlacement='top'
                 open={isCalendarOpen}
             />
             {isCalendarOpen && <Overlay onClick={handleOverlayClick} />}

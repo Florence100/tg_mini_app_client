@@ -1,6 +1,17 @@
 .summary {
-    padding: var(--medium-padding) var(--big-padding);
+    /* padding: var(--medium-padding) var(--big-padding); */
+    padding: var(--medium-padding);
     display: flex;
     justify-content: space-between;
-    font-weight: bold;
+    font-family: 'Montserrat-semibold', sans-serif;
+    align-items: flex-end;
+}
+
+.summary .summary-amount {
+    font-size: 1.125rem;
+}
+
+.summary .summary-amount span {
+    font-size: 1rem;
+    color: var(--primary-color);
 }

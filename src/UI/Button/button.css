@@ -1,9 +1,8 @@
 .button {
-    padding: 0.25rem;
     border-radius: var(--border-radius);
     color: var(--tg-theme-button-text-color);
     text-transform: uppercase;
-    padding: 0.5rem;
+    padding: 10px;
     transition: scale 0.15s ease;
     user-select: none;
 
@@ -13,19 +12,18 @@
 
     &.add-btn {
         width: 100%;
+        max-width: 150px;
         background-color: var(--primary-color);
-        padding: 0.5rem 0.25rem;
+        padding: 10px 5px;
     }
 
     &.decr-btn {
         max-width: 2.5rem;
         width: 100%;
-        background-color: var(--tg-theme-destructive-text-color);
     }
 
     &.incr-btn {
         max-width: 2.5rem;
         width: 100%;
-        background-color: var(--primary-color);
     }
 }

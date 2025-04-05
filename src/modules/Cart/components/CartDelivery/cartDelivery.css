@@ -1,7 +1,19 @@
 .cart-delivery {
-    padding: var(--medium-padding) var(--big-padding);
+    padding: var(--medium-padding);
     display: flex;
     justify-content: space-between;
+    font-family: 'Montserrat-medium', sans-serif;
+    color: var(--tg-theme-subtitle-text-color);
+    align-items: flex-end;
+}
+
+.cart-delivery .price {
+    font-size: 1.125rem;
+}
+
+.cart-delivery .price span {
+    color: var(--primary-color);
+    font-size: 1rem;
 }
 
 /* CSSTransition Styles */

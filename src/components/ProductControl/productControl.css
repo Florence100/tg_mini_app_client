@@ -1,5 +1,8 @@
 .product-control {
     width: 100%;
+    padding: 0 var(--small-padding);
+    display: flex;
+    justify-content: center;
 }
 
 .product-control>div {
@@ -7,7 +10,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-weight: bold;
 }
 
 .product-control.catalog-product-control>div {
@@ -16,21 +18,19 @@
 
 .product-control .btns-box {
     display: flex;
-    gap: var(--small-gap);
 }
 
-.product-control.catalog-product-control .btns-box {
+.product-control .btns-box {
     width: 100%;
+    max-width: 150px;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 0 auto;
 }
 
-.product-control.catalog-product-control .product-counter {
-    border-radius: 50%;
-    background-color: var(--primary-color);
+.product-control .product-counter {
     color: var(--tg-theme-button-text-color);
-    position: absolute;
-    top: -0.75rem;
-    right: -0.75rem;
 }

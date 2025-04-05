@@ -1,12 +1,15 @@
 .cart-header {
     display: flex;
     justify-content: space-between;
-    padding: var(--big-padding);
+    /* padding: var(--medium-padding) var(--big-padding); */
+    padding: var(--medium-padding);
+    font-family: 'Montserrat-semibold', sans-serif;
 }
 
 .cart-header .header-edit {
-    color: var(--accent-color);
+    color: var(--primary-color);
     cursor: pointer;
+    text-decoration: underline;
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     -webkit-tap-highlight-color: transparent;
 }

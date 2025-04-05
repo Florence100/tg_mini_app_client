@@ -2,11 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deliveryChange } from '../../store/formSlice';
 import RadioInput from 'UI/RadioInput/RadioInput';
 import Header from 'UI/Header/Header';
-
 import './deliveryField.css';
 
 
 export default function DeliveryField () {
+    console.log('---DeliveryField---');
     const dispatch = useDispatch();
     const deliveryOption = useSelector(state => state.form.delivery);
 
@@ -22,16 +22,14 @@ export default function DeliveryField () {
                 onChange={(e) => dispatch(deliveryChange(e.target.value))}
             />
             <RadioInput 
-                label={<>Доставка курьером - <b>500 руб.</b>*</>}
+                label={<>Доставка *</>}
                 id='delivery'
                 name='deliveryOption'
                 value='delivery'
                 checked={deliveryOption === 'delivery'}
                 onChange={(e) => dispatch(deliveryChange(e.target.value))}
             />
-            <span>
-                * <span className='delivery-info'><b>Бесплатная </b>доставка при заказе от 5 000 руб.</span>
-            </span>
+            <div className='delivery-info'>* Стоимость доставки <span>&#8381;</span>500. При заказе от <span className='currency'>&#8381;</span>5.000 доставка бесплатна.</div>
         </div>
     )
 }

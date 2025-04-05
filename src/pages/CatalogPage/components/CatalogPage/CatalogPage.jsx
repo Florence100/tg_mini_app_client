@@ -1,41 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
-import useCompareCartData from 'hooks/useCompareCartData';
 import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
 import ProductCard from '../ProductCard/ProductCard';
-import getProducts from './fetch/getProducts';
-import authorization from './fetch/authorization';
+import { ProductsContext } from 'app/App';
 import './catalogPage.css';
 
-
 export default function CatalogPage() {
-    const { tg, initData } = useTelegram();
+    console.log('--- Catalog Page ---')
+    const { tg } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
-    const [products, setProducts] = useState([]);
-    useCompareCartData();
-
-    useEffect(() => {
-        authorization(initData);
-    }, [initData, tg]);
-
-    useEffect(() => {
-        async function fetchData() {
-            const data = await getProducts(initData);
-            if (data.message) {
-                tg.showPopup({
-                    message: data.message,
-                    buttons: [{
-                        text: 'Хорошо, спасибо',
-                    }]
-                })
-                return;
-            }
-            setProducts(data);
-        }
-        fetchData();
-    }, [initData, tg]);
+    const products = useContext(ProductsContext);
 
     useEffect(() => {
         const handleMainBtnClick = () => {
@@ -45,7 +21,7 @@ export default function CatalogPage() {
         if (!isCartEmpty) {
             tg.MainButton
                 .setParams({
-                    color: '#31b545',
+                    // color: '#31b545',
                     text: 'Перейти в корзину',
                     hasShineEffect: true
                 })
@@ -65,13 +41,13 @@ export default function CatalogPage() {
         tg.BackButton.hide();
     })
 
+    const productsCards = useMemo(() => {
+        return products.map((item) => <ProductCard product={item} key={item.id} />);
+    }, [products])
+
     return (
         <div className='catalog-page'>
-            { products.length > 0 &&
-                products?.map((item) => (
-                    <ProductCard product={item} key={item.id} />
-                ))
-            }
+            {productsCards}
         </div>
     )
 }

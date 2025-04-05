@@ -5,9 +5,10 @@ export default function CartDelivery(props) {
 
     return (
         <div className='cart-delivery'>
-            <b>Доставка курьером</b>
-            <div>
-                {deliveryCost ? `${deliveryCost.toFixed(2)} руб.` : 'Бесплатно'}
+            <div>Доставка курьером</div>
+            <div className='price'>
+                <span>&#8381;</span>
+                {deliveryCost ? `${deliveryCost.toFixed(2)}` : '0.00'}
             </div>
         </div>
     )

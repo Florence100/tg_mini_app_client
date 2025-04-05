@@ -4,6 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 //     entities: {
 //         1: {
 //             count: 1,
+//             name: '...',
+//             price: 25,
+//             count: 1,
+//             img: '...'
 //         },
 //         ...
 //     },
@@ -18,7 +22,11 @@ export const cartSlice = createSlice({
         add: (state, action) => {
             const productItem = action.payload;
             state.entities[productItem.id] = {
+                id: productItem.id,
+                name: productItem.name,
+                price: productItem.price,
                 count: 1,
+                img: productItem.img
             }
         },
         remove: (state, action) => {
@@ -36,7 +44,13 @@ export const cartSlice = createSlice({
         setCart: (state, action) => {
             const items = action.payload;
             state.entities = items.reduce((acc, item) => {
-                acc[item.id] = { count: item.count };
+                acc[item.id] = { 
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    count: item.count,
+                    img: item.img
+                };
                 return acc;
             }, {});
         },

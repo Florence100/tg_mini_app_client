@@ -1,6 +1,6 @@
 .header {
     text-transform: uppercase;
-    font-weight: bold;
     cursor: auto;
-    font-size: 1rem;
+    font-size: 1.125rem;
+    font-family: 'Montserrat-semibold', sans-serif;
 }

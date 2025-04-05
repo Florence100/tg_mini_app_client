@@ -1,9 +1,28 @@
-import './errorPage.css';
 import { useRouteError } from 'react-router-dom';
+import { useEffect } from 'react';
+import useTelegram from 'hooks/useTelegram';
+import { useNavigate } from 'react-router-dom';
+import './errorPage.css';
+
 
 export default function ErrorPage() {
     const error = useRouteError();
-    console.error(error);
+    const { tg } = useTelegram();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        function handleBackBtnClick () {
+            navigate('/');
+        }
+
+        tg.BackButton.show();
+        tg.BackButton.onClick(handleBackBtnClick);
+
+        return () => {
+            tg.BackButton.hide();
+            tg.BackButton.offClick(handleBackBtnClick);
+        }
+    }, [tg, navigate]);
 
     return (
         <div className='error-page'>

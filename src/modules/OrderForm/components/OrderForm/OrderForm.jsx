@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useRef, useEffect, useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import DeliveryField from '../DeliveryField/DeliveryField';
 import DateField from '../DateField/DateField';
 import TimeField from '../TimeField/TimeField';
@@ -7,116 +7,91 @@ import AddressField from '../AddressField/AddressField';
 import CommentField from '../CommentField/CommentField';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
-import addInvoice from './fetch/addInvoice';
-import deleteInvoice from './fetch/deleteInvoice';
-import { clearCart } from 'app/store';
-import clearBasketFetch from './fetch/clearBasket';
+import useTelegramEvents from 'hooks/useTelegramEvents';
+import createInvoice from './fetch/createInvoice';
+import createOrder from './fetch/createOrder';
+import { showWarningPopup } from 'helpers/showPopup';
+import handleApiResponse from 'helpers/handleApiResponse';
 import 'react-datepicker/dist/react-datepicker.css';
 import './orderForm.css';
 
 
-export default function OrderForm ({ cartProducts, deliveryCost, cartAmount }) {
-    const [readyDate, setReadyDate] = useState(null);
-    const [readyTime, setReadyTime] = useState(null);
-    const [address, setAddress] = useState('');
-    const datePickerRef = useRef(null);
+export default function OrderForm ({ deliveryCost, cartAmount }) {
+    console.log('---OrderForm---');
     const commentRef = useRef('');
-    const { tg, user, chatId, initData } = useTelegram();
+    const { tg, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const deliveryOption = useSelector(state => state.form.delivery);
-    const dispatch = useDispatch();
+    const readyDate = useSelector(state => state.form.readyDate);
+    const readyTime = useSelector(state => state.form.readyTime);
+    const address = useSelector(state => state.form.address);
+    useTelegramEvents();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    };
 
-    const openPaymentSystem = useCallback(async (payload) => {
-        console.log('Payment system will be open');
-        try {
-            const response = await addInvoice(payload, initData);
-            const data = await response.json();
-            if (data.message) {
-                tg.showPopup({
-                    message: data.message,
-                    buttons: [{
-                        text: 'Хорошо, спасибо',
-                    }]
-                })
-            }
-            if (data.invoiceLink) {
-                tg.openInvoice(data.invoiceLink);
-            }
-        } catch (e) {
-            if (!tg.isVersionAtLeast('6.2')) {
-                tg.showPopup({ 
-                    message: 'Пожалуйста, обновите версию Telegram до версии 6.2 и выше',
-                    buttons: [{
-                        text: 'Хорошо, спасибо',
-                    }]
-                })
-            } else {
-                tg.showPopup({ 
-                    message: 'Произошла ошибка при создании счета. Пожалуйста, попробуйте еще раз.',
-                    buttons: [{
-                        text: 'Хорошо, спасибо',
-                    }]
-                })
-            }
-        } finally {
-            tg.MainButton.hideProgress();
+    const openPaymentSystem = useCallback((orderId) => {
+        if (!tg.isVersionAtLeast('6.2')) {
+            showWarningPopup(tg, 'Пожалуйста, обновите версию Telegram до версии 6.2 и выше');
+            return;
         }
+
+        createInvoice(initData, orderId)
+            .then((data) => {
+                if (data.error) {
+                    handleApiResponse(data, tg);
+                    return;
+                }
+                tg.openInvoice(data.invoiceLink);
+            })
+            .finally(() => {
+                tg.MainButton.hideProgress();
+            })
     }, [initData, tg]);
 
 
     const handleMainBtnClick = useCallback(() => {
         const payload = {
-            userId         : user?.id || chatId,
-            cartItems      : cartProducts,
             deliveryOption : deliveryOption,
             deliveryCost   : deliveryOption === 'delivery' ? deliveryCost : 0,
             readyDate      : readyDate,
-            readyTime      : readyTime.value,
+            readyTime      : readyTime?.value,
             address        : address,
-            commentRef     : commentRef.current
+            comment        : commentRef.current
         }
-        console.log('payload:', payload);
-        openPaymentSystem(payload);
-        tg.MainButton.showProgress();
-    }, [
-        address,
-        cartProducts,
-        chatId,
-        deliveryCost,
-        deliveryOption,
-        openPaymentSystem,
-        readyDate,
-        readyTime,
-        tg,
-        user?.id
-    ]);
+
+        createOrder(initData, payload)
+            .then((data) => {
+                if (data.error) {
+                    handleApiResponse(data, tg);
+                    return;
+                }
+
+                const orderId = data.orderId;
+                openPaymentSystem(orderId);
+                tg.MainButton.showProgress();
+            })
+    }, [deliveryOption, deliveryCost, readyDate, readyTime?.value, address, initData, openPaymentSystem, tg]);
 
 
     const mainButtonParams = useMemo(() => {
-        if (!isCartEmpty && readyDate && readyTime && commentRef) {
-            if (deliveryOption === 'pickup') {
-                return {
-                    color: '#31b545',
-                    text: `Оплатить ${cartAmount.toFixed(2)} руб.`,
-                    hasShineEffect: true };
-            } else if (deliveryOption === 'delivery' && address) {
-                return {
-                    color: '#31b545',
-                    text: `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`,
-                    hasShineEffect: true
-                };
-            }
+        return {
+            text: deliveryOption === 'pickup' 
+                ? `Оплатить ${cartAmount.toFixed(2)} руб.` 
+                : `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`,
+            hasShineEffect: true
         }
-        return null;
-    }, [address, cartAmount, deliveryCost, deliveryOption, isCartEmpty, readyDate, readyTime]);
+    }, [deliveryOption, cartAmount, deliveryCost])
 
+    const shouldShowButton = useMemo(() => {
+        if (deliveryOption === 'pickup') {
+            return !isCartEmpty && readyDate && readyTime;
+        } else if (deliveryOption === 'delivery') {
+            return !isCartEmpty && readyDate && readyTime && address;
+        }
+        return false;
+    }, [address, deliveryOption, isCartEmpty, readyDate, readyTime])
 
     useEffect(() => {
-        if (mainButtonParams) {
+        if (shouldShowButton) {
             tg.MainButton.setParams(mainButtonParams).show();
             tg.MainButton.onClick(handleMainBtnClick);
         } else {
@@ -128,98 +103,20 @@ export default function OrderForm ({ cartProducts, deliveryCost, cartAmount }) {
             tg.MainButton.hide();
             tg.MainButton.offClick(handleMainBtnClick);
         }
-
-    }, [mainButtonParams, handleMainBtnClick, tg]);
-
-
-    const onInvoiceCloseHandler = useCallback((eventType, eventData) => {
-        if (eventType === 'invoice_closed') {
-            console.log('eventData: ', eventData)
-            if (eventData.status === 'failed' || eventData.status === 'cancelled') {
-                deleteInvoice(eventData.slug, eventData.status, chatId, user, initData);
-            }
-            if (eventData.status === 'paid') {
-                console.log('Successful payment. Mini app is closing');
-                deleteInvoice(eventData.slug, eventData.status, chatId, user, initData);
-                clearBasketFetch(initData)
-                    .then(() => {
-                        dispatch(clearCart());
-                        tg.close();
-                    })
-            }
-        }
-    }, [chatId, user, initData, dispatch, tg]);
+    }, [handleMainBtnClick, mainButtonParams, shouldShowButton, tg.MainButton]);
 
 
-    const wrapReceiveEvent = useCallback((originalFunction) => {
-        return function(eventType, eventData) {
-            if (eventType === 'invoice_closed') {
-                onInvoiceCloseHandler(eventType, eventData);
-            }
-            if (originalFunction) {
-                originalFunction(eventType, eventData);
-            }
-        };
-    }, [onInvoiceCloseHandler]);
-
-
-    useEffect(() => {
-        // Обработка собственных событий Telegram
-        let originalReceiveEvent;
-
-        if (window.TelegramGameProxy) {
-            originalReceiveEvent = window.TelegramGameProxy.receiveEvent;
-            window.TelegramGameProxy.receiveEvent = wrapReceiveEvent(originalReceiveEvent);
-        }
-
-        if (window.Telegram && window.Telegram.WebView) {
-            originalReceiveEvent = window.Telegram.WebView.receiveEvent;
-            window.Telegram.WebView.receiveEvent = wrapReceiveEvent(originalReceiveEvent);
-        }
-
-        if (window.TelegramGameProxy_receiveEvent) {
-            originalReceiveEvent = window.TelegramGameProxy_receiveEvent;
-            window.TelegramGameProxy_receiveEvent = wrapReceiveEvent(originalReceiveEvent);
-        }
-
-        return () => {
-            if (window.TelegramGameProxy) {
-                window.TelegramGameProxy.receiveEvent = originalReceiveEvent;
-            }
-
-            if (window.Telegram && window.Telegram.WebView) {
-                window.Telegram.WebView.receiveEvent = originalReceiveEvent;
-            }
-
-            if (window.TelegramGameProxy_receiveEvent) {
-                window.TelegramGameProxy_receiveEvent = originalReceiveEvent;
-            }
-        };
-    }, [tg, chatId, user, onInvoiceCloseHandler, wrapReceiveEvent]);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    };
 
     return (
         <form onSubmit={handleSubmit} className='order-form'>
             <DeliveryField />
-            <DateField
-                readyDate={readyDate}
-                setReadyDate={setReadyDate}
-                setReadyTime={setReadyTime}
-                datePickerRef={datePickerRef}
-            />
-            <TimeField
-                readyTime={readyTime}
-                readyDate={readyDate}
-                setReadyTime={setReadyTime}
-            />
-            { deliveryOption === 'delivery' && 
-                <AddressField 
-                    address={address}
-                    setAddress={setAddress}
-                />
-            }
-            <CommentField 
-                comment={commentRef}
-            />
+            <DateField />
+            <TimeField />
+            { deliveryOption === 'delivery' && <AddressField /> }
+            <CommentField comment={commentRef} />
         </form>
     )
 }

@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
-import useCompareCartData from 'hooks/useCompareCartData';
-import ProductDescription from '../ProductDescription/ProductDescription';
 import ProductControl from 'components/ProductControl/ProductControl';
 import getOneProduct from './fetch/getOneProduct';
+import handleApiResponse from 'helpers/handleApiResponse';
+import { SERVER_URL } from 'consts/consts';
 import './productPage.css';
 
 
@@ -15,27 +15,23 @@ function productPageLoader({ params }) {
 }
 
 export default function ProductPage() {
+    console.log('--- Product Page ---');
     const { tg, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
     const productId = useLoaderData();
     const [product, setProduct] = useState();
-    useCompareCartData();
 
     useEffect(() => {
         getOneProduct(productId, initData)
             .then((data) => {
-                if (data.message) {
-                    tg.showPopup({
-                        message: data.message,
-                        buttons: [{
-                            text: 'Хорошо, спасибо',
-                        }]
-                    })
+                if (data.error) {
+                    handleApiResponse(data, tg);
                     return;
                 }
-                console.log('data: ', data)
-                setProduct(...data);
+                if (data.length > 0) {
+                    setProduct(...data);
+                }
         })
     }, [initData, productId, tg]);
 
@@ -47,7 +43,6 @@ export default function ProductPage() {
         if (!isCartEmpty) {
             tg.MainButton
                 .setParams({
-                    color: '#31b545',
                     text: 'Перейти в корзину',
                     hasShineEffect: true
                 })
@@ -68,19 +63,23 @@ export default function ProductPage() {
         tg.BackButton.onClick(() => {
             navigate('/');
         })
-        tg.MainButton.setText('Перейти в корзину');
+        return () => {
+            tg.BackButton.hide();
+        }
     }, [tg, navigate])
 
     return (
         <div className='product-page'>
             { product && 
-                <ProductDescription product={product} />
-            }
-            { product && 
-                <ProductControl
-                    product={product}
-                    label={'Добавлено в корзину:'}
-                />
+                <div className='product-descr'>
+                    <img className='img' src={`${SERVER_URL}${product.img}`} alt='Фото товара'></img>
+                    <div className='name'>{product.name}</div>
+                    <div className='price'><span>&#8381;</span>{product.price}</div>
+                        <ProductControl
+                            product={product}
+                        />
+                    <div className='description'>{product.description}</div>
+                </div>
             }
         </div>
     )

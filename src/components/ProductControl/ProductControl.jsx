@@ -9,45 +9,68 @@ import removeProduct from './fetch/removeProduct';
 import incrProduct from './fetch/incrProduct';
 import decrProduct from './fetch/decrProduct';
 import useTelegram from 'hooks/useTelegram';
+import handleApiResponse from 'helpers/handleApiResponse';
 import './productControl.css';
 
 
 export default function ProductControl(props) {
+    console.log('---ProductControl---')
     const product = props.product;
     const productId = product.id;
     const productCount = useSelector(state => state.cart.entities[productId]?.count) || 0;
-    const { initData } = useTelegram();
-
-    const label = props.label;
+    const { tg, initData } = useTelegram();
 
     const dispatch = useDispatch();
 
     const handleAddClick = () => {
         dispatch(add(product));
-        addProduct(initData, productId);
+        addProduct(initData, productId)
+            .then((data) => {
+                if (data.error) {
+                    handleApiResponse(data, tg);
+                    return;
+                }
+            })
     }
 
     const handleIncrClick = () => {
         dispatch(increment(product));
-        incrProduct(initData, productId);
+        incrProduct(initData, productId)
+            .then((data) => {
+                if (data.error) {
+                    handleApiResponse(data, tg);
+                    return;
+                }
+            })
     }
 
     const handleDecrClick = () => {
         if (productCount > 1) {
             dispatch(decrement(product));
-            decrProduct(initData, productId);
+            decrProduct(initData, productId)
+                .then((data) => {
+                    if (data.error) {
+                        handleApiResponse(data, tg);
+                        return;
+                    }
+                })
         } else {
             dispatch(remove(product));
-            removeProduct(initData, productId);
+            removeProduct(initData, productId)
+                .then((data) => {
+                    if (data.error) {
+                        handleApiResponse(data, tg);
+                        return;
+                    }
+                })
         }
     }
 
     return (
-        <div className={'product-control ' + props.className}>
+        <div className={'product-control '}>
             { productCount === 0 
                 ? <Button className='add-btn' onClick={handleAddClick}>Добавить</Button>
                 : <div>
-                    { label && <div>{label}</div>}
                     <div className='btns-box'>
                         <Button className='decr-btn' onClick={handleDecrClick}>
                             <FontAwesomeIcon icon={faMinus} />

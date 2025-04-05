@@ -15,8 +15,7 @@ async function removeProduct(initData, productId) {
 
         return response.json();
     } catch (e) {
-        console.log(e.message);
-        return new Error(e);
+        throw new Error(e);
     }
 }
 

@@ -12,9 +12,10 @@ export default function CartSummary(props) {
         <div className='summary'>
             <Header text='Итого' />
             <div className='summary-amount'> 
+                <span>&#8381;</span>
                 { deliveryOption === 'delivery'
-                    ? `${(cartAmount + deliveryCost).toFixed(2)} руб.`
-                    : `${cartAmount.toFixed(2)} руб.`
+                    ? `${(cartAmount + deliveryCost).toFixed(2)}`
+                    : `${cartAmount.toFixed(2)}`
                 }
             </div>
         </div>

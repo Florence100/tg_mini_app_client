@@ -16,8 +16,7 @@ async function addProduct(initData, productId) {
 
         return response.json();
     } catch (e) {
-        console.log(e)
-        return new Error(e);
+        throw new Error(e);
     }
 }
 

@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
 import Select, { components } from 'react-select';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { readyTimeChange } from '../../store/formSlice';
 import Overlay from 'components/Overlay/Overlay';
 import Header from 'UI/Header/Header';
 import './timeField.css';
 
+const timeOptions = [
+    { value: '12:00-14:00', label: '12:00 - 14:00' },
+    { value: '14:00-16:00', label: '14:00 - 16:00' },
+    { value: '16:00-18:00', label: '16:00 - 18:00' },
+    { value: '18:00-20:00', label: '18:00 - 20:00' },
+    { value: '20:00-22:00', label: '20:00 - 22:00' },
+];
 
-export default function TimeField(props) {
+export default function TimeField() {
+    console.log('---TimeField---');
+    const dispatch = useDispatch();
     const deliveryOption = useSelector(state => state.form.delivery);
+    const readyDate = useSelector(state => state.form.readyDate);
+    const readyTime = useSelector(state => state.form.readyTime);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const timeOptions = [
-        { value: '12:00-14:00', label: '12:00 - 14:00' },
-        { value: '14:00-16:00', label: '14:00 - 16:00' },
-        { value: '16:00-18:00', label: '16:00 - 18:00' },
-        { value: '18:00-20:00', label: '18:00 - 20:00' },
-        { value: '20:00-22:00', label: '20:00 - 22:00' },
-    ];
-
     const handleTimeChange = (time) => {
-        props.setReadyTime(time);
+        dispatch(readyTimeChange(time));
     }
 
     const handleSelectOpen = () => {
@@ -38,9 +42,8 @@ export default function TimeField(props) {
     const CustomInput = (props) => (
         <components.Input 
             {...props} 
-            inputMode='none' 
-            readOnly 
-            onClick={handleSelectOpen}
+            inputMode='none'
+            readOnly
         />
     );
 
@@ -49,20 +52,16 @@ export default function TimeField(props) {
             <Header text={ deliveryOption === 'pickup' ? 'Время самовывоза:' : 'Время доставки:' }/>
             <Select
                 options={timeOptions}
-                value={props.readyTime}
+                value={readyTime}
                 onChange={handleTimeChange}
                 onMenuOpen={handleSelectOpen}
                 onMenuClose={handleSelectClose}
                 openMenuOnClick={true}
-                onFocus={() => console.log('Focus')}
-                onKeyDown={() => console.log('Key Down')}
-                isDisabled={props.readyDate ? false : true}
+                isDisabled={readyDate ? false : true}
                 isOptionDisabled={ (option) => {
                     const currentDate = new Date();
-                    const selectedDate = new Date(props.readyDate);
-                    // const startTime = parseInt(option.value.split(':')[0]);
+                    const selectedDate = new Date(readyDate);
                     const endTime = parseInt(option.value.split('-')[1].split(':')[0]);
-                    // Устанавливаем часы объекта selectedDate на значение конечного времени
                     selectedDate.setHours(endTime);
                     // Проверяем, готов ли заказ не ранее чем через 1 час от текущего времени
                     return currentDate.getTime() + 1 * 60 * 60 * 1000 > selectedDate.getTime();
@@ -90,12 +89,17 @@ export default function TimeField(props) {
                     }),
                     option: (baseStyles, state) => ({
                         ...baseStyles,
-                        padding: 'var(--medium-padding) var(--big-padding)',
-                        backgroundColor: state.isSelected ? 'var(--primary-color)' : 'var(--tg-theme-bg-color)',
+                        padding: 'var(--medium-padding)',
+                        backgroundColor: state.isSelected 
+                            ? 'var(--primary-color)' 
+                            :  'var(--tg-theme-bg-color)',
+                        ':active': {
+                            backgroundColor: 'var(--primary-color-translucent)',
+                        },
                     }),
                     valueContainer: (baseStyles, state) => ({
                         ...baseStyles,
-                        padding: 'var(--medium-padding) var(--big-padding)',
+                        padding: 'var(--medium-padding)',
                     }),
                     input: (baseStyles, state) => ({
                         ...baseStyles,
@@ -111,7 +115,7 @@ export default function TimeField(props) {
                         color: 'var(--tg-theme-hint-color)',
                         fontSize: '1rem',
                         margin: 0,
-                        fontFamily: "'Arial', sans-serif"
+                        fontFamily: "'Montserrat-regular', sans-serif"
                     }),
                     dropdownIndicator: (baseStyles, states) => ({
                         ...baseStyles,
