@@ -1,0 +1,18 @@
+.delivery {
+    padding: 0 var(--medium-padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--medium-gap);
+    font-family: 'Montserrat-medium', sans-serif;
+}
+
+.delivery .delivery-info {
+    font-size: 1rem;
+    text-wrap: wrap;
+    font-family: 'Montserrat-regular', sans-serif;
+    color: var(--tg-theme-subtitle-text-color);
+}
+
+.delivery .currency {
+    font-size: 0.875rem;
+}

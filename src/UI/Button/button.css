@@ -1,0 +1,29 @@
+.button {
+    border-radius: var(--border-radius);
+    color: var(--tg-theme-button-text-color);
+    text-transform: uppercase;
+    padding: 10px;
+    transition: scale 0.15s ease;
+    user-select: none;
+
+    &:active {
+        scale: 0.9;
+    }
+
+    &.add-btn {
+        width: 100%;
+        max-width: 150px;
+        background-color: var(--primary-color);
+        padding: 10px 5px;
+    }
+
+    &.decr-btn {
+        max-width: 2.5rem;
+        width: 100%;
+    }
+
+    &.incr-btn {
+        max-width: 2.5rem;
+        width: 100%;
+    }
+}

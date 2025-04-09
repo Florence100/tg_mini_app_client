@@ -5,12 +5,12 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import App from './app/App';
-import store from './app/store';
-import ProductCatalog from './common/components/productCatalog/ProductCatalog';
-import ProductDetails, { productDetailLoader } from './common/components/productDetails/ProductDetails';
-import ErrorPage from './common/components/errorPage/ErrorPage';
-import Checkout from './common/components/checkout/Checkout';
+import App from 'app/App';
+import { store } from 'app/store';
+import CatalogPage from 'pages/CatalogPage/components/CatalogPage/CatalogPage';
+import ProductPage, { productPageLoader } from 'pages/ProductPage/components/ProductPage/ProductPage';
+import ErrorPage from 'pages/ErrorPage/components/ErrorPage/ErrorPage';
+import CheckoutPage from 'pages/CheckoutPage/components/CheckoutPage/CheckoutPage';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -21,27 +21,45 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <ProductCatalog />,
+                element: <CatalogPage />,
             },
             {
                 path: 'card/:productId',
-                element: <ProductDetails />,
-                loader: productDetailLoader,
+                element: <ProductPage />,
+                loader: productPageLoader,
             },
             {
                 path: 'checkout',
-                element: <Checkout />
+                element: <CheckoutPage />
             }
         ],
     },
-]);
+], {
+    future: {
+        v7_fetcherPersist: true,
+        v7_normalizeFormMethod: true,
+        v7_partialHydration: true,
+        v7_skipActionErrorRevalidation: true,
+    }
+});
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <RouterProvider router={router} />
+            <RouterProvider 
+                router={router} 
+                future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true,
+                }}
+            />
         </Provider>
     </React.StrictMode>
 );
+// root.render(
+//     <Provider store={store}>
+//         <RouterProvider router={router} />
+//     </Provider>
+// );

@@ -1,0 +1,41 @@
+.cart-delivery {
+    padding: var(--medium-padding);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Montserrat-medium', sans-serif;
+    color: var(--tg-theme-subtitle-text-color);
+    align-items: flex-end;
+}
+
+.cart-delivery .price {
+    font-size: 1.125rem;
+}
+
+.cart-delivery .price span {
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+/* CSSTransition Styles */
+.cart-delivery-enter {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.cart-delivery-enter-active {
+    opacity: 1;
+    max-height: 44px;
+    transition: opacity 100ms ease 25ms, max-height 100ms ease;
+} 
+
+.cart-delivery-exit {
+    opacity: 1;
+    max-height: 44px;
+}
+
+.cart-delivery-exit-active {
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 100ms ease, max-height 100ms ease 25ms;
+}

@@ -1,0 +1,57 @@
+.css-9q6e0c-control:hover {
+    border-bottom: 1px solid var(--tg-theme-section-separator-color) !important;
+}
+
+.css-2wst4w-option:active {
+    background-color: var(--tg-theme-secondary-bg-color) !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.menu-open__menu {
+    animation: fadeIn 150ms ease;
+}
+
+.menu-close__menu { 
+    animation: fadeOut 150ms ease;
+}
+
+.readyTime {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--medium-gap);
+
+    .header {
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: auto;
+        padding: 0 var(--medium-padding);
+    }
+
+    .wrapper {
+        display: flex;
+        gap: var(--medium-gap);
+        align-items: center;
+    }
+}

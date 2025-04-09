@@ -1,0 +1,36 @@
+.product-control {
+    width: 100%;
+    padding: 0 var(--small-padding);
+    display: flex;
+    justify-content: center;
+}
+
+.product-control>div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product-control.catalog-product-control>div {
+    width: 100%;
+}
+
+.product-control .btns-box {
+    display: flex;
+}
+
+.product-control .btns-box {
+    width: 100%;
+    max-width: 150px;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.product-control .product-counter {
+    color: var(--tg-theme-button-text-color);
+}

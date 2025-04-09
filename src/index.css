@@ -71,20 +71,50 @@ label {
 
 /* ---------------- General styles ---------------- */
 
+@font-face {
+    font-family: 'Montserrat-regular';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Montserrat-medium';
+    font-style: normal;
+    font-weight: 500;
+    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Montserrat-semibold';
+    font-style: normal;
+    font-weight: 600;
+    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-SemiBold.ttf');
+}
+
+@font-face {
+    font-family: 'Montserrat-bold';
+    font-style: normal;
+    font-weight: 800;
+    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Bold.ttf');
+}
+
 body {
-    background: var(--tg-theme-bg-color);
+    min-height: 100vh;
     color: var(--tg-theme-text-color);
     font-size: 16px;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Montserrat-regular', sans-serif;
+    line-height: 1.2;
+    background: linear-gradient(var(--tg-theme-bg-color), var(--tg-theme-secondary-bg-color));
 }
 
 /* ---------------- Variables ---------------- */
 :root {
   /* Colors: */
-    --primary-color: #f8a917;
-    --accent-color: #31b545;
-    --primary-color-translucent: rgba(248, 169, 23, 0.4);
-    --accent-color-translucent: rgba(49, 181, 69, 0.4);
+    --primary-color: #4C7D6C;
+    --accent-color: #6A244D;
+    --primary-color-translucent: rgba(76, 125, 108, 0.4);
+    --accent-color-translucent: rgba(106, 36, 77, 0.4);
 
   /* Sizes: */
     --big-padding: 1.5rem;
@@ -93,7 +123,8 @@ body {
     --big-gap: 1.5rem;
     --medium-gap: 0.75rem;
     --small-gap: 0.5rem;
+    --extra-small-gap: 0.25rem;
 
-    --border-radius: 0.5rem;
+    --border-radius: 1.25rem;
     --max-width-content: 34rem;
 }

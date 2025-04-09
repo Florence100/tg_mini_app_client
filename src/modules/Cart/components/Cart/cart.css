@@ -1,0 +1,10 @@
+.cart {
+    background-color: var(--tg-theme-bg-color);
+    width: 100%;
+    border-bottom: 1px solid var(--tg-theme-section-separator-color);
+}
+
+.cart .cart-wrapper {
+    max-width: var(--max-width-content);
+    margin: auto;
+}
