@@ -10,7 +10,6 @@ import './cart.css';
 
 
 export default function Cart({ cartProducts, deliveryCost, cartAmount }) {
-    console.log('--- Cart ---');
     const deliveryOption = useSelector(state => state.form.delivery);
     const isCartEmpty = useIsCartEmpty();
     const nodeRef = useRef(null);

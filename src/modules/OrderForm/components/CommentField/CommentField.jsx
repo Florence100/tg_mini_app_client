@@ -3,7 +3,6 @@ import TextArea from 'UI/TextArea/TextArea';
 
 
 export default function CommentField(props) {
-    console.log('---CommentField---');
     const handleCommentChange = (event) => {
         const sanitizedValue = DOMPurify.sanitize(event.target.value);
         props.comment.current = sanitizedValue;

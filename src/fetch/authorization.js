@@ -11,8 +11,6 @@ async function authorization(initData) {
             }
         })
 
-        console.log('auth response:', response)
-
         if (!response.ok) {
             processErrorResponse(response);
             return;

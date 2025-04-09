@@ -17,7 +17,6 @@ import './orderForm.css';
 
 
 export default function OrderForm ({ deliveryCost, cartAmount }) {
-    console.log('---OrderForm---');
     const commentRef = useRef('');
     const { tg, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
@@ -25,6 +24,8 @@ export default function OrderForm ({ deliveryCost, cartAmount }) {
     const readyDate = useSelector(state => state.form.readyDate);
     const readyTime = useSelector(state => state.form.readyTime);
     const address = useSelector(state => state.form.address);
+    const cartItems = useSelector(state => Object.values(state.cart.entities));
+    console.log('cartItems: ', cartItems)
     useTelegramEvents();
 
 
@@ -55,7 +56,8 @@ export default function OrderForm ({ deliveryCost, cartAmount }) {
             readyDate      : readyDate,
             readyTime      : readyTime?.value,
             address        : address,
-            comment        : commentRef.current
+            comment        : commentRef.current,
+            cartItems      : cartItems
         }
 
         createOrder(initData, payload)
@@ -69,7 +71,7 @@ export default function OrderForm ({ deliveryCost, cartAmount }) {
                 openPaymentSystem(orderId);
                 tg.MainButton.showProgress();
             })
-    }, [deliveryOption, deliveryCost, readyDate, readyTime?.value, address, initData, openPaymentSystem, tg]);
+    }, [deliveryOption, deliveryCost, readyDate, readyTime?.value, address, cartItems, initData, openPaymentSystem, tg]);
 
 
     const mainButtonParams = useMemo(() => {

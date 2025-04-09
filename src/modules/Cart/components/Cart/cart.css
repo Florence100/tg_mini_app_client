@@ -2,7 +2,6 @@
     background-color: var(--tg-theme-bg-color);
     width: 100%;
     border-bottom: 1px solid var(--tg-theme-section-separator-color);
-    /* box-shadow: 0px 2px 6px rgba(133, 133, 133, 0.6); */
 }
 
 .cart .cart-wrapper {

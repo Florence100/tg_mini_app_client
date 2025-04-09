@@ -1,5 +1,4 @@
 .summary {
-    /* padding: var(--medium-padding) var(--big-padding); */
     padding: var(--medium-padding);
     display: flex;
     justify-content: space-between;

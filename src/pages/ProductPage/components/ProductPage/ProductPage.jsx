@@ -15,7 +15,6 @@ function productPageLoader({ params }) {
 }
 
 export default function ProductPage() {
-    console.log('--- Product Page ---');
     const { tg, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
@@ -37,6 +36,7 @@ export default function ProductPage() {
 
     useEffect(() => {
         const handleMainBtnClick = () => {
+            // tg?.HapticFeedback.impactOccurred('medium');
             navigate('/checkout');
         }
 
@@ -72,7 +72,12 @@ export default function ProductPage() {
         <div className='product-page'>
             { product && 
                 <div className='product-descr'>
-                    <img className='img' src={`${SERVER_URL}${product.img}`} alt='Фото товара'></img>
+                    <img 
+                        className='img' 
+                        src={`${SERVER_URL}${product.img}`} 
+                        alt='Фото товара'
+                        loading='lazy'
+                    />
                     <div className='name'>{product.name}</div>
                     <div className='price'><span>&#8381;</span>{product.price}</div>
                         <ProductControl

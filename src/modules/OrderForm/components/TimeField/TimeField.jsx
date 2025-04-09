@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { readyTimeChange } from '../../store/formSlice';
 import Overlay from 'components/Overlay/Overlay';
 import Header from 'UI/Header/Header';
+import useTelegram from 'hooks/useTelegram';
 import './timeField.css';
 
 const timeOptions = [
@@ -15,15 +16,16 @@ const timeOptions = [
 ];
 
 export default function TimeField() {
-    console.log('---TimeField---');
     const dispatch = useDispatch();
     const deliveryOption = useSelector(state => state.form.delivery);
     const readyDate = useSelector(state => state.form.readyDate);
     const readyTime = useSelector(state => state.form.readyTime);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { tg } = useTelegram();
 
     const handleTimeChange = (time) => {
         dispatch(readyTimeChange(time));
+        tg?.HapticFeedback.selectionChanged();
     }
 
     const handleSelectOpen = () => {

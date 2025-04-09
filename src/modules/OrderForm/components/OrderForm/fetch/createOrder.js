@@ -15,7 +15,8 @@ async function createOrder(initData, payload) {
                 readyDate      : payload.readyDate,
                 readyTime      : payload.readyTime,
                 address        : payload.address,
-                comment        : payload.comment
+                comment        : payload.comment,
+                cartItems      : payload.cartItems
             })
         })
 

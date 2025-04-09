@@ -1,4 +1,5 @@
 function showAuthErrorPopup(tg, message) {
+    tg?.HapticFeedback.notificationOccurred('error');
     tg.showPopup({
         message: message,
         buttons: [{
@@ -15,6 +16,7 @@ function showAuthErrorPopup(tg, message) {
 }
 
 function showWarningPopup(tg, message) {
+    tg?.HapticFeedback.notificationOccurred('warning');
     tg.showPopup({
         message: message,
         buttons: [{

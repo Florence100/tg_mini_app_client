@@ -8,6 +8,7 @@ import Header from 'UI/Header/Header';
 import getMaxDate from '../../helpers/getMaxDate';
 import { readyDateChange, readyTimeChange } from '../../store/formSlice';
 import moment from 'moment-timezone';
+import useTelegram from 'hooks/useTelegram';
 import './dateField.css';
 
 registerLocale('ru', ru);
@@ -24,12 +25,12 @@ const CustomDateInput = React.forwardRef(({ value, onClick }, ref) => (
 ));
 
 export default function DateField() {
-    console.log('---DateField---')
     const dispatch = useDispatch();
     const deliveryOption = useSelector(state => state.form.delivery);
     const [calendarClass, setCalendarClass] = useState('fade-in');
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const readyDate = useSelector(state => state.form.readyDate);
+    const { tg } = useTelegram();
 
     useEffect(() => {
         const handleOrientationChange = () => {
@@ -52,6 +53,7 @@ export default function DateField() {
         const formattedReadyDate = moment.tz(date, 'Europe/Moscow').format('YYYY-MM-DD');
         dispatch(readyDateChange(formattedReadyDate));
         dispatch(readyTimeChange(null));
+        tg?.HapticFeedback.selectionChanged();
     };
 
     const handleCalendarOpen = () => {

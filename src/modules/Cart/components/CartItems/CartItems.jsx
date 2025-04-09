@@ -4,14 +4,18 @@ import { SERVER_URL } from 'consts/consts';
 
 
 const CartItems = memo(function CartItems({ cartProducts, isCartEmpty }) {
-    console.log('---CartItems---');
     return (
         <div className='cart-items'>
             {!isCartEmpty
                 ? cartProducts.map(function(item) {
                     return (
                         <div className='cart-item' key={item.id}>
-                            <img className='product-img' src={`${SERVER_URL}${item.img}`} alt='Фото товара'></img>
+                            <img 
+                                className='product-img' 
+                                src={`${SERVER_URL}${item.img}`} 
+                                alt='Фото товара'
+                                loading='lazy'
+                            />
                             <div className='container'>
                                 <div>
                                     <span className='name'>{item.name}</span>
@@ -22,7 +26,7 @@ const CartItems = memo(function CartItems({ cartProducts, isCartEmpty }) {
                         </div>
                     )
                 })
-                : <div className='cart-items'>В корзине нет товаров</div>
+                : <div className='cart-item'>В корзине нет товаров</div>
             }
         </div>
     )

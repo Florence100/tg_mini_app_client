@@ -1,39 +1,47 @@
 import { useEffect, createContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useTelegram from 'hooks/useTelegram';
 import getProducts from 'fetch/getProducts';
 import authorization from 'fetch/authorization';
-import getBasket from 'fetch/getBasket';
 import handleApiResponse from 'helpers/handleApiResponse';
-import { setCart } from 'app/store';
 import './app.css';
 
 const ProductsContext = createContext([]);
 
 function App() {
-    console.log('--- App ---');
     const { tg, initData } = useTelegram();
     const dispatch = useDispatch();
     const [products, setProducts] = useState([]);
-    const [theme, setTheme] = useState(tg.colorScheme);
+    const cartItems = useSelector(state => Object.values(state.cart.entities));
+
+    // useEffect(() => {
+    //     tg?.checkHomeScreenStatus((status) => {
+    //         console.log('status', status)
+    //         console.log('addToHomeScreen доступен:', typeof tg.addToHomeScreen === 'function');
+    //         if (status === 'unsupported' || status === 'added') {
+    //             return;
+    //         } 
+    //         if (status === 'missed' || status === 'unknown') {
+    //             tg.addToHomeScreen();
+    //             console.log('addToHomeScreen выполнен');
+    //         }
+    //     })
+    // }, [tg])
 
     useEffect(() => {
         tg.onEvent('themeChanged', () => {
-            setTheme(tg.colorScheme);
-        })
-    }, [tg, tg.colorScheme])
-
-    useEffect(() => {
-        tg.onEvent('activated', () => {
-            console.log('activated')
+            tg.setHeaderColor(tg.themeParams.bg_color);
         })
     }, [tg])
 
     useEffect(() => {
+        tg.isClosingConfirmationEnabled = cartItems.length > 0 ? true : false;
+    }, [cartItems, tg])
+
+    useEffect(() => {
         getProducts(initData)
             .then((data) => {
-                console.log('getproducts', data)
                 if (data.error) {
                     handleApiResponse(data, tg);
                     return;
@@ -45,23 +53,10 @@ function App() {
             .then(() => {
                 authorization(initData)
                     .then((data) => {
-                        console.log('App data', data)
                         if (data?.error) {
                             handleApiResponse(data, tg);
                             return;
                         }
-                    })
-                    .then(() => {
-                        getBasket(initData)
-                            .then((data) => {
-                                if (data.error) {
-                                    handleApiResponse(data, tg);
-                                    return;
-                                }
-                                if (data.length > 0) {
-                                    dispatch(setCart(data));
-                                }
-                            })
                     })
             })
     }, [dispatch, initData, tg]);
@@ -76,7 +71,7 @@ function App() {
 
     return (
         <ProductsContext.Provider value={products}>
-            <div className={`App ${theme}`}>
+            <div className={`App`}>
                 { products.length > 0 && <Outlet /> }
             </div>
         </ProductsContext.Provider>

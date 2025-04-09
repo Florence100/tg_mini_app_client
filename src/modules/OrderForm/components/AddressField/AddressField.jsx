@@ -7,7 +7,6 @@ import TextArea from 'UI/TextArea/TextArea';
 
 
 export default function AddressField(props) {
-    console.log('---AddressField---');
     const dispatch = useDispatch();
     const [localAddress, setLocalAddress] = useState('');
 

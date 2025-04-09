@@ -5,12 +5,16 @@ import './productCard.css';
 
 
 export default function ProductCard({ product }) {
-    console.log('---ProductCard---')
     return (
         <div className='product-card'>
             <div className='content'>
                 <Link to={`/card/${product.id}`}>
-                    <img className='img' src={`${SERVER_URL}${product.img}`} alt={product.name} />
+                    <img 
+                        className='img' 
+                        src={`${SERVER_URL}${product.img}`} 
+                        alt={product.name} 
+                        loading='lazy'
+                    />
                 </Link>
                 <div className='name'>{product.name}</div>
                 <div className='price'><span>&#8381;</span>{product.price}</div>

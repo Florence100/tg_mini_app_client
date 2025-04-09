@@ -7,7 +7,6 @@ import { ProductsContext } from 'app/App';
 import './catalogPage.css';
 
 export default function CatalogPage() {
-    console.log('--- Catalog Page ---')
     const { tg } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
@@ -15,13 +14,13 @@ export default function CatalogPage() {
 
     useEffect(() => {
         const handleMainBtnClick = () => {
+            // tg?.HapticFeedback.impactOccurred('medium');
             navigate('/checkout');
         }
 
         if (!isCartEmpty) {
             tg.MainButton
                 .setParams({
-                    // color: '#31b545',
                     text: 'Перейти в корзину',
                     hasShineEffect: true
                 })

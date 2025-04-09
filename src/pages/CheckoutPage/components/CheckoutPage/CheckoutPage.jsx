@@ -11,7 +11,6 @@ import './checkoutPage.css';
 
 
 function CheckoutPage () {
-    console.log('--- CheckoutPage ---');
     const { tg } = useTelegram();
     const navigate = useNavigate();
     const isCartEmpty = useIsCartEmpty();

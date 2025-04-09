@@ -2,67 +2,38 @@ import { useDispatch, useSelector } from 'react-redux';
 import { add, increment, decrement, remove } from 'app/store';
 import Button from 'UI/Button/Button';
 import Counter from 'UI/Counter/Counter';
+import useTelegram from 'hooks/useTelegram';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import addProduct from './fetch/addProduct';
-import removeProduct from './fetch/removeProduct';
-import incrProduct from './fetch/incrProduct';
-import decrProduct from './fetch/decrProduct';
-import useTelegram from 'hooks/useTelegram';
-import handleApiResponse from 'helpers/handleApiResponse';
+
 import './productControl.css';
 
 
 export default function ProductControl(props) {
-    console.log('---ProductControl---')
+    const { tg } = useTelegram();
     const product = props.product;
     const productId = product.id;
     const productCount = useSelector(state => state.cart.entities[productId]?.count) || 0;
-    const { tg, initData } = useTelegram();
 
     const dispatch = useDispatch();
 
     const handleAddClick = () => {
         dispatch(add(product));
-        addProduct(initData, productId)
-            .then((data) => {
-                if (data.error) {
-                    handleApiResponse(data, tg);
-                    return;
-                }
-            })
+        tg?.HapticFeedback.selectionChanged();
     }
 
     const handleIncrClick = () => {
         dispatch(increment(product));
-        incrProduct(initData, productId)
-            .then((data) => {
-                if (data.error) {
-                    handleApiResponse(data, tg);
-                    return;
-                }
-            })
+        tg?.HapticFeedback.selectionChanged();
     }
 
     const handleDecrClick = () => {
         if (productCount > 1) {
             dispatch(decrement(product));
-            decrProduct(initData, productId)
-                .then((data) => {
-                    if (data.error) {
-                        handleApiResponse(data, tg);
-                        return;
-                    }
-                })
+            tg?.HapticFeedback.selectionChanged();
         } else {
             dispatch(remove(product));
-            removeProduct(initData, productId)
-                .then((data) => {
-                    if (data.error) {
-                        handleApiResponse(data, tg);
-                        return;
-                    }
-                })
+            tg?.HapticFeedback.selectionChanged();
         }
     }
 

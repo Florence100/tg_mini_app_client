@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react';
 import updateInvoiceStatus from 'fetch/updateInvoiceStatus';
-import clearBasket from 'fetch/clearBasket';
 import useTelegram from 'hooks/useTelegram';
 
 
@@ -12,14 +11,19 @@ const useTelegramEvents = () => {
 
         const { slug, status } = eventData;
 
-        if (status === 'failed' || status === 'cancelled') {
+        if (status === 'failed') {
+            tg?.HapticFeedback.notificationOccurred('error');
+            updateInvoiceStatus(initData, slug, status);
+        }
+        if (status === 'cancelled') {
             updateInvoiceStatus(initData, slug, status);
         }
         if (status === 'paid') {
             console.log('Successful payment. Mini app is closing');
+            tg?.HapticFeedback.notificationOccurred('success');
             updateInvoiceStatus(initData, slug, status)
-                .then(() => {
-                    clearBasket(initData).then(() => tg.close());
+                .then((data) => {
+                    tg.close()
                 })
         }
     }, [initData, tg]);
