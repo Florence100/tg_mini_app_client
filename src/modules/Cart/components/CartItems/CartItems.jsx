@@ -26,7 +26,7 @@ const CartItems = memo(function CartItems({ cartProducts, isCartEmpty }) {
                         </div>
                     )
                 })
-                : <div className='cart-item'>В корзине нет товаров</div>
+                : <div>В корзине нет товаров</div>
             }
         </div>
     )

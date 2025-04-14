@@ -26,7 +26,6 @@ export default function DeliveryField () {
                 value='pickup'
                 checked={deliveryOption === 'pickup'}
                 onChange={handleDeliveryChange}
-                // onChange={(e) => dispatch(deliveryChange(e.target.value))}
             />
             <RadioInput 
                 label={<>Доставка *</>}
@@ -35,9 +34,8 @@ export default function DeliveryField () {
                 value='delivery'
                 checked={deliveryOption === 'delivery'}
                 onChange={handleDeliveryChange}
-                // onChange={(e) => dispatch(deliveryChange(e.target.value))}
             />
-            <div className='delivery-info'>* Стоимость доставки <span>&#8381;</span>500. При заказе от <span className='currency'>&#8381;</span>5.000 доставка бесплатна.</div>
+            <div className='delivery-info'>* Стоимость доставки <span className='currency'>&#8381;</span>500. При заказе от <span className='currency'>&#8381;</span>5.000 доставка бесплатна.</div>
         </div>
     )
 }
