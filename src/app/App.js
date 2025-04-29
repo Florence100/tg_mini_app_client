@@ -8,11 +8,14 @@ import handleApiResponse from 'helpers/handleApiResponse';
 import './app.css';
 
 const ProductsContext = createContext([]);
+const ShowAdminContext = createContext([]);
 
 function App() {
     const { tg, initData } = useTelegram();
     const dispatch = useDispatch();
     const [products, setProducts] = useState([]);
+    const [userRoles, setUserRoles] = useState([]);
+    const [showAdminButton, setShowAdminButton] = useState(false);
     const cartItems = useSelector(state => Object.values(state.cart.entities));
 
     // useEffect(() => {
@@ -53,9 +56,15 @@ function App() {
             .then(() => {
                 authorization(initData)
                     .then((data) => {
-                        if (data.error) {
+                        if (data?.error) {
                             handleApiResponse(data, tg);
                             return;
+                        }
+
+                        setUserRoles(data?.roles || []);
+
+                        if (data?.roles.includes('admin')) {
+                            setShowAdminButton(true);
                         }
                     })
             })
@@ -71,13 +80,15 @@ function App() {
 
     return (
         <ProductsContext.Provider value={products}>
-            <div className={`App`}>
-                { products.length > 0 && <Outlet /> }
-            </div>
+            <ShowAdminContext.Provider value={showAdminButton}>
+                <div className={`App`}>
+                    { products.length > 0 && <Outlet /> }
+                </div>
+            </ShowAdminContext.Provider>
         </ProductsContext.Provider>
     );
 }
 
 export default App;
-export { ProductsContext };
+export { ProductsContext, ShowAdminContext };
 

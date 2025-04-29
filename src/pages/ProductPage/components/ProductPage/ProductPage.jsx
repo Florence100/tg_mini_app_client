@@ -20,6 +20,7 @@ export default function ProductPage() {
     const navigate = useNavigate();
     const productId = useLoaderData();
     const [product, setProduct] = useState();
+    const images = product?.images.map((image) => image.src);
 
     useEffect(() => {
         getOneProduct(productId, initData)
@@ -36,7 +37,6 @@ export default function ProductPage() {
 
     useEffect(() => {
         const handleMainBtnClick = () => {
-            // tg?.HapticFeedback.impactOccurred('medium');
             navigate('/checkout');
         }
 
@@ -74,7 +74,7 @@ export default function ProductPage() {
                 <div className='product-descr'>
                     <img 
                         className='img' 
-                        src={`${SERVER_URL}${product.img}`} 
+                        src={`${SERVER_URL}${images[0]}`} 
                         alt='Фото товара'
                         loading='lazy'
                     />

@@ -21,12 +21,14 @@ export const cartSlice = createSlice({
     reducers: {
         add: (state, action) => {
             const productItem = action.payload;
+            const images = productItem?.images.map((image) => image.src);
+
             state.entities[productItem.id] = {
                 id: productItem.id,
                 name: productItem.name,
                 price: productItem.price,
                 count: 1,
-                img: productItem.img
+                img: images[0]
             }
         },
         remove: (state, action) => {

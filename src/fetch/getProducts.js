@@ -3,7 +3,7 @@ import processErrorResponse from 'helpers/processErrorResponse';
 
 async function getProducts(initData) {
     try {
-        const response = await fetch(`${SERVER_URL}/products`, {
+        const response = await fetch(`${SERVER_URL}/products/actually`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

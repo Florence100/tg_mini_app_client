@@ -26,4 +26,10 @@
         max-width: 2.5rem;
         width: 100%;
     }
+
+    &.admin-btn {
+        color: var(--primary-color);
+        font-family: 'Montserrat-semibold';
+        padding: var(--big-padding) var(--medium-padding);
+    }
 }

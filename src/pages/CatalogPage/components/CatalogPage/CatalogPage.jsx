@@ -3,18 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
 import ProductCard from '../ProductCard/ProductCard';
-import { ProductsContext } from 'app/App';
+import { ProductsContext, ShowAdminContext } from 'app/App';
+import Button from 'UI/Button/Button';
 import './catalogPage.css';
 
 export default function CatalogPage() {
-    const { tg } = useTelegram();
+    const { tg, initData } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
     const products = useContext(ProductsContext);
+    const showAdminButton = useContext(ShowAdminContext);
 
     useEffect(() => {
         const handleMainBtnClick = () => {
-            // tg?.HapticFeedback.impactOccurred('medium');
             navigate('/checkout');
         }
 
@@ -45,8 +46,22 @@ export default function CatalogPage() {
     }, [products])
 
     return (
-        <div className='catalog-page'>
-            {productsCards}
-        </div>
+        <>
+            <div className='catalog-page'>
+                {productsCards}
+            </div>
+            { showAdminButton && (
+                <div className='admin-login'>
+                    <Button 
+                        className='admin-btn' 
+                        onClick={() => {
+                            localStorage.setItem('username', initData);
+                            window.location.href = '/admin' 
+                        }}>
+                        Войти в админ-панель
+                    </Button>
+                </div>
+            )}
+        </>
     )
 }

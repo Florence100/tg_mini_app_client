@@ -4,10 +4,13 @@ import { SERVER_URL } from 'consts/consts';
 
 
 const CartItems = memo(function CartItems({ cartProducts, isCartEmpty }) {
+    console.log('cartProducts: ', cartProducts)
     return (
         <div className='cart-items'>
             {!isCartEmpty
                 ? cartProducts.map(function(item) {
+                    // const images = item?.images.map((image) => image.src);
+
                     return (
                         <div className='cart-item' key={item.id}>
                             <img 

@@ -11,6 +11,7 @@ import CatalogPage from 'pages/CatalogPage/components/CatalogPage/CatalogPage';
 import ProductPage, { productPageLoader } from 'pages/ProductPage/components/ProductPage/ProductPage';
 import ErrorPage from 'pages/ErrorPage/components/ErrorPage/ErrorPage';
 import CheckoutPage from 'pages/CheckoutPage/components/CheckoutPage/CheckoutPage';
+import AdminPanel from 'pages/AdminPanel/components/AdminPanel/AdminPanel';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             {
                 path: 'checkout',
                 element: <CheckoutPage />
+            },
+            {
+                path: 'admin',
+                element: <AdminPanel />
             }
         ],
     },

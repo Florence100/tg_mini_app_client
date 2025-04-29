@@ -38,10 +38,10 @@ img {
     vertical-align: top;
 }
 
-img, svg {
+/* img, svg {
     max-width: 100%;
     height: auto;
-}
+} */
 
 input::-ms-clear {
     display: none;

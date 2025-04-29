@@ -5,13 +5,15 @@ import './productCard.css';
 
 
 export default function ProductCard({ product }) {
+    const images = product.images.map((image) => image.src);
+
     return (
         <div className='product-card'>
             <div className='content'>
                 <Link to={`/card/${product.id}`}>
                     <img 
                         className='img' 
-                        src={`${SERVER_URL}${product.img}`} 
+                        src={`${SERVER_URL}${images[0]}`} 
                         alt={product.name} 
                         loading='lazy'
                     />
