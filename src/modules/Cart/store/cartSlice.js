@@ -43,19 +43,6 @@ export const cartSlice = createSlice({
             const productItem = action.payload;
             state.entities[productItem.id].count += 1;
         },
-        // setCart: (state, action) => {
-        //     const items = action.payload;
-        //     state.entities = items.reduce((acc, item) => {
-        //         acc[item.id] = { 
-        //             id: item.id,
-        //             name: item.name,
-        //             price: item.price,
-        //             count: item.count,
-        //             img: item.img
-        //         };
-        //         return acc;
-        //     }, {});
-        // },
         clearCart: (state, action) => {
             state.entities = {};
         }

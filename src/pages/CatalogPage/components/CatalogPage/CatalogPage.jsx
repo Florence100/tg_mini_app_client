@@ -1,9 +1,9 @@
-import { useEffect, useContext, useMemo } from 'react';
+import { useEffect, useContext, useMemo, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
 import ProductCard from '../ProductCard/ProductCard';
-import { ProductsContext, ShowAdminContext } from 'app/App';
+import { ProductsContext, IsAdminContext } from 'app/App';
 import Button from 'UI/Button/Button';
 import './catalogPage.css';
 
@@ -12,7 +12,7 @@ export default function CatalogPage() {
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
     const products = useContext(ProductsContext);
-    const showAdminButton = useContext(ShowAdminContext);
+    const isAdmin = useContext(IsAdminContext);
 
     useEffect(() => {
         const handleMainBtnClick = () => {
@@ -46,11 +46,11 @@ export default function CatalogPage() {
     }, [products])
 
     return (
-        <>
+        <Suspense fallback={<div>Загрузка...</div>}>
             <div className='catalog-page'>
                 {productsCards}
             </div>
-            { showAdminButton && (
+            { isAdmin && (
                 <div className='admin-login'>
                     <Button 
                         className='admin-btn' 
@@ -62,6 +62,6 @@ export default function CatalogPage() {
                     </Button>
                 </div>
             )}
-        </>
+        </Suspense>
     )
 }

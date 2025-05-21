@@ -21,6 +21,7 @@ const dataProvider = {
         const query = {
             sort: JSON.stringify([field, order]),
             range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
+            filter: JSON.stringify(params.filter),
         };
 
         const url = `${SERVER_URL}/${resource}?${stringify(query)}`;
@@ -55,15 +56,48 @@ const dataProvider = {
             console.error('Empty response for getOne:', json);
         }
 
-        const data = {
-            ...json[0],
-            images: json[0]?.images.map((image) => ({
-                ...image,
-                src: `${SERVER_URL}${image.src}`
-            }))
+        if (resource === 'products') {
+            const data = {
+                ...json,
+                images: json?.images.map((image) => ({
+                    ...image,
+                    src: `${SERVER_URL}${image.src}`
+                }))
+            };
+            return { data: data };
+        }
+
+        return { data: json };
+    },
+
+    getMany: async (resource, params) => {
+        const ids = params.ids;
+        const url = `${SERVER_URL}/${resource}/many?ids=${ids.join(',')}`;
+        const { json } = await httpClient(url, { signal: params.signal });
+        return { data: json };
+    },
+
+    getManyReference: async (resource, params) => {
+        const { page, perPage } = params.pagination;
+        const { field, order } = params.sort;
+
+        const query = {
+            sort: JSON.stringify([field, order]),
+            range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
+            filter: JSON.stringify({
+                ...params.filter,
+                [params.target]: params.id,
+            }),
         };
 
-        return { data: data };
+        const url = `${SERVER_URL}/${resource}?${stringify(query)}`;
+        console.log('query', url)
+        const { json, headers } = await httpClient(url, { signal: params.signal });
+
+        return {
+            data: json,
+            total: parseInt(headers.get('content-range')?.split('/').pop(), 10),
+        };
     },
 
     create: async (resource, params) => {
@@ -93,6 +127,8 @@ const dataProvider = {
     },
 
     update: async (resource, params) => {
+        const url = `${SERVER_URL}/${resource}/${params.id}`;
+
         if (resource === 'products') {
             const formData = new FormData();
 
@@ -110,8 +146,6 @@ const dataProvider = {
                         formData.append('images', file.rawFile);
                     });
             }
-        
-            const url = `${SERVER_URL}/${resource}/${params.id}`;
 
             const { json } = await httpClient(url, {
                 method: 'PUT',
@@ -120,6 +154,13 @@ const dataProvider = {
         
             return { data: json };
         }
+
+        const { json } = await httpClient(url, {
+            method: 'PUT',
+            body: JSON.stringify(params.data),
+        })
+        console.log('json: ', json)
+        return { data: json };
     },
 
     delete: async (resource, params) => {

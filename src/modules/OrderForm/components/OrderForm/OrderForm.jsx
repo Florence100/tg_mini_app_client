@@ -12,6 +12,7 @@ import createInvoice from './fetch/createInvoice';
 import createOrder from './fetch/createOrder';
 import { showWarningPopup } from 'helpers/showPopup';
 import handleApiResponse from 'helpers/handleApiResponse';
+import formatMoney from 'helpers/formatMoney';
 import 'react-datepicker/dist/react-datepicker.css';
 import './orderForm.css';
 
@@ -25,9 +26,7 @@ export default function OrderForm ({ deliveryCost, cartAmount }) {
     const readyTime = useSelector(state => state.form.readyTime);
     const address = useSelector(state => state.form.address);
     const cartItems = useSelector(state => Object.values(state.cart.entities));
-    console.log('cartItems: ', cartItems)
     useTelegramEvents();
-
 
     const openPaymentSystem = useCallback((orderId) => {
         if (!tg.isVersionAtLeast('6.2')) {
@@ -77,8 +76,8 @@ export default function OrderForm ({ deliveryCost, cartAmount }) {
     const mainButtonParams = useMemo(() => {
         return {
             text: deliveryOption === 'pickup' 
-                ? `Оплатить ${cartAmount.toFixed(2)} руб.` 
-                : `Оплатить ${(cartAmount + deliveryCost).toFixed(2)} руб.`,
+                ? `Оплатить ${formatMoney(cartAmount).toFixed(2)} руб.` 
+                : `Оплатить ${formatMoney(cartAmount + deliveryCost).toFixed(2)} руб.`,
             hasShineEffect: true
         }
     }, [deliveryOption, cartAmount, deliveryCost])

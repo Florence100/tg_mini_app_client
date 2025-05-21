@@ -38,11 +38,6 @@ img {
     vertical-align: top;
 }
 
-/* img, svg {
-    max-width: 100%;
-    height: auto;
-} */
-
 input::-ms-clear {
     display: none;
 }
@@ -75,28 +70,24 @@ label {
     font-family: 'Montserrat-regular';
     font-style: normal;
     font-weight: 400;
-    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf');
+    font-display: swap;
+    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Regular.woff2');
 }
 
 @font-face {
     font-family: 'Montserrat-medium';
     font-style: normal;
     font-weight: 500;
-    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Medium.ttf');
+    font-display: swap;
+    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Medium.woff2');
 }
 
 @font-face {
     font-family: 'Montserrat-semibold';
     font-style: normal;
     font-weight: 600;
-    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-SemiBold.ttf');
-}
-
-@font-face {
-    font-family: 'Montserrat-bold';
-    font-style: normal;
-    font-weight: 800;
-    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-Bold.ttf');
+    font-display: swap;
+    src: url('./fonts/Montserrat_Alternates/MontserratAlternates-SemiBold.woff2');
 }
 
 body {

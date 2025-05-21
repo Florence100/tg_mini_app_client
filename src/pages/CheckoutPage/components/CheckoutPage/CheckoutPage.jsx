@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Cart } from 'modules/Cart/index';
@@ -34,19 +34,21 @@ function CheckoutPage () {
     }, [tg, navigate]);
 
     return (
-        <div className='checkout'>
-            <Cart 
-                cartProducts={cartProducts}
-                deliveryCost={deliveryCost}
-                cartAmount={cartAmount}
-            />
-            {!isCartEmpty && 
-                <OrderForm 
+        <Suspense fallback={<div>Загрузка...</div>}>
+            <div className='checkout'>
+                <Cart 
+                    cartProducts={cartProducts}
                     deliveryCost={deliveryCost}
                     cartAmount={cartAmount}
                 />
-            }
-        </div>
+                {!isCartEmpty && 
+                    <OrderForm 
+                        deliveryCost={deliveryCost}
+                        cartAmount={cartAmount}
+                    />
+                }
+            </div>
+        </Suspense>
     )
 }
 

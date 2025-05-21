@@ -5,5 +5,5 @@ export default function getCartAmount(cartProducts) {
         return sum + (count * price);
     }, 0);
 
-    return +cartAmount.toFixed(2);
+    return cartAmount;
 }

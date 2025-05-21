@@ -1,5 +1,6 @@
 import Header from 'UI/Header/Header';
 import { useSelector } from 'react-redux';
+import formatMoney from 'helpers/formatMoney';
 import './cartSummary.css';
 
 
@@ -14,8 +15,8 @@ export default function CartSummary(props) {
             <div className='summary-amount'> 
                 <span>&#8381;</span>
                 { deliveryOption === 'delivery'
-                    ? `${(cartAmount + deliveryCost).toFixed(2)}`
-                    : `${cartAmount.toFixed(2)}`
+                    ? `${formatMoney(cartAmount + deliveryCost).toFixed(2)}`
+                    : `${formatMoney(cartAmount).toFixed(2)}`
                 }
             </div>
         </div>

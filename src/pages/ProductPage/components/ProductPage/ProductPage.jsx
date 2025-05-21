@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import useTelegram from 'hooks/useTelegram';
 import { useIsCartEmpty } from 'hooks/useIsCartEmpty';
@@ -6,6 +6,7 @@ import ProductControl from 'components/ProductControl/ProductControl';
 import getOneProduct from './fetch/getOneProduct';
 import handleApiResponse from 'helpers/handleApiResponse';
 import { SERVER_URL } from 'consts/consts';
+import formatMoney from 'helpers/formatMoney';
 import './productPage.css';
 
 
@@ -25,12 +26,12 @@ export default function ProductPage() {
     useEffect(() => {
         getOneProduct(productId, initData)
             .then((data) => {
+                console.log('data', data)
                 if (data.error) {
                     handleApiResponse(data, tg);
                     return;
-                }
-                if (data.length > 0) {
-                    setProduct(...data);
+                } else {
+                    setProduct(data);
                 }
         })
     }, [initData, productId, tg]);
@@ -69,24 +70,26 @@ export default function ProductPage() {
     }, [tg, navigate])
 
     return (
-        <div className='product-page'>
-            { product && 
-                <div className='product-descr'>
-                    <img 
-                        className='img' 
-                        src={`${SERVER_URL}${images[0]}`} 
-                        alt='Фото товара'
-                        loading='lazy'
-                    />
-                    <div className='name'>{product.name}</div>
-                    <div className='price'><span>&#8381;</span>{product.price}</div>
-                        <ProductControl
-                            product={product}
+        <Suspense fallback={<div>Загрузка...</div>}>
+            <div className='product-page'>
+                { product && 
+                    <div className='product-descr'>
+                        <img 
+                            className='img' 
+                            src={`${SERVER_URL}${images[0]}`} 
+                            alt='Фото товара'
+                            loading='lazy'
                         />
-                    <div className='description'>{product.description}</div>
-                </div>
-            }
-        </div>
+                        <div className='name'>{product.name}</div>
+                        <div className='price'><span>&#8381;</span>{ formatMoney(product.price).toFixed(2) }</div>
+                            <ProductControl
+                                product={product}
+                            />
+                        <div className='description'>{product.description}</div>
+                    </div>
+                }
+            </div>
+        </Suspense>
     )
 }
 

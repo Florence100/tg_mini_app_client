@@ -117,7 +117,8 @@ export default function TimeField() {
                         color: 'var(--tg-theme-hint-color)',
                         fontSize: '1rem',
                         margin: 0,
-                        fontFamily: "'Montserrat-regular', sans-serif"
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontWight: 400
                     }),
                     dropdownIndicator: (baseStyles, states) => ({
                         ...baseStyles,

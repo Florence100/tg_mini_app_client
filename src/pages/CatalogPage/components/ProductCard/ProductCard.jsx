@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import ProductControl from 'components/ProductControl/ProductControl';
 import { SERVER_URL } from 'consts/consts';
 import './productCard.css';
+import formatMoney from 'helpers/formatMoney';
 
 
 export default function ProductCard({ product }) {
@@ -19,7 +20,7 @@ export default function ProductCard({ product }) {
                     />
                 </Link>
                 <div className='name'>{product.name}</div>
-                <div className='price'><span>&#8381;</span>{product.price}</div>
+                <div className='price'><span>&#8381;</span>{ formatMoney(product.price).toFixed(2) }</div>
             </div>
             <ProductControl product={product} className={'catalog-product-control'}/>
         </div>
