@@ -11,6 +11,7 @@ import { productPageLoader } from 'pages/ProductPage/components/ProductPage/Prod
 import ErrorPage from 'pages/ErrorPage/components/ErrorPage/ErrorPage';
 import useTelegram from 'hooks/useTelegram';
 import authorization from 'fetch/authorization';
+import handleApiResponse from 'helpers/handleApiResponse';
 import './index.css';
 
 
@@ -27,65 +28,66 @@ function AdminPanelWrapper() {
     )
 }
 
-function RouterWrapper({ isAdmin }) {
-    const router = createBrowserRouter([
-        {
-            path: '/',
-            element: <App isAdmin={isAdmin} />,
-            errorElement: <ErrorPage />,
-            children: [
-                {
-                    index: true,
-                    element: <LasyCatalogPage />
-                },
-                {
-                    path: 'card/:productId',
-                    element: <LasyProductPage />,
-                    loader: productPageLoader
-                },
-                {
-                    path: 'checkout',
-                    element: <LasyCheckoutPage />
-                },
-                ...(isAdmin ? [{
-                    path: 'admin',
-                    element: <AdminPanelWrapper />
-                }] : [])
-            ]
-        }
-    ], {
-        future: {
-            v7_fetcherPersist: true,
-            v7_normalizeFormMethod: true,
-            v7_partialHydration: true,
-            v7_skipActionErrorRevalidation: true
-        }
-    });
+const createAppRouter = (isAdmin) => createBrowserRouter([
+    {
+        path: '/',
+        element: <App isAdmin={isAdmin} />,
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                index: true,
+                element: <LasyCatalogPage />
+            },
+            {
+                path: 'card/:productId',
+                element: <LasyProductPage />,
+                loader: productPageLoader
+            },
+            {
+                path: 'checkout',
+                element: <LasyCheckoutPage />
+            },
+            ...(isAdmin ? [{
+                path: 'admin',
+                element: <AdminPanelWrapper />
+            }] : [])
+        ]
+    }
+]);
 
-    return (
-        <RouterProvider 
-            router={router} 
-            future={{
-                v7_startTransition: true,
-                v7_relativeSplatPath: true
-            }}
-        />
-    );
-}
 
 function Root() {
-    const { initData } = useTelegram();
+    const { initData, tg } = useTelegram();
     const [isAdmin, setIsAdmin] = useState(null);
 
     useEffect(() => {
-        authorization(initData).then((data) => {
-            setIsAdmin(data?.roles?.includes('admin'));
-        });
-    }, [initData]);
+        if (!initData) return;
+
+        authorization(initData)
+            .then((data) => {
+                if (data.error) {
+                    handleApiResponse(data, tg);
+                    return;
+                }
+                const isUserAdmin = data?.roles?.includes('admin');
+                setIsAdmin(isUserAdmin);
+                localStorage.setItem('initData', initData);
+            })
+    }, [initData, tg]);
+
+    if (isAdmin === null) return null;
+
+    const router = createAppRouter(isAdmin);
 
     return (
         <Provider store={store}>
-            {isAdmin !== null && <RouterWrapper isAdmin={isAdmin} />}
+            <RouterProvider
+                router={router}
+                future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true
+                }}
+            />
         </Provider>
     );
 }

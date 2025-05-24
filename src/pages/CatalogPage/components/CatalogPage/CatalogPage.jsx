@@ -55,7 +55,6 @@ export default function CatalogPage() {
                     <Button 
                         className='admin-btn' 
                         onClick={() => {
-                            localStorage.setItem('username', initData);
                             window.location.href = '/admin' 
                         }}>
                         Войти в админ-панель

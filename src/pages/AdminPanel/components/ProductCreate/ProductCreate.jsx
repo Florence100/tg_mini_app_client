@@ -11,7 +11,21 @@ import {
     required
 } from 'react-admin';
 import { useMediaQuery, Box } from '@mui/material';
+import { MAX_FILES, MAX_SIZE } from 'consts/consts';
 
+
+const validateImages = (value) => {
+    if (!value) return;
+
+    if (value.length > MAX_FILES) {
+        return `Можно загрузить не более ${MAX_FILES} изображений.`;
+    }
+
+    const oversized = value.find(file => file.rawFile && file.rawFile.size > MAX_SIZE);
+    if (oversized) {
+        return `Файл '${oversized.title}' превышает максимальный размер 150 KB.`;
+    }
+};
 
 const ProductCreateActions = () => (
     <TopToolbar>
@@ -60,10 +74,11 @@ export const ProductCreate = () => {
                 <ImageInput 
                     source='images' 
                     label='Изображения' 
-                    placeholder='Переместите изображения для загрузки или нажмите, чтобы выбрать одно' 
+                    placeholder='Переместите изображения для загрузки или нажмите, чтобы выбрать одно. Максимальный размер изображения 150kB. Максимальное количество изображений - 5.' 
                     accept='image/*'
                     maxSize='150000'
                     multiple 
+                    validate={validateImages}
                 >
                     <ImageField 
                         source='src' 

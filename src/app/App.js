@@ -7,7 +7,7 @@ import handleApiResponse from 'helpers/handleApiResponse';
 import './app.css';
 
 const ProductsContext = createContext([]);
-const IsAdminContext = createContext([]);
+const IsAdminContext = createContext(false);
 
 function App({ isAdmin }) {
     const { tg, initData } = useTelegram();
@@ -20,6 +20,8 @@ function App({ isAdmin }) {
         tg.onEvent('themeChanged', () => {
             tg.setHeaderColor(tg.themeParams.bg_color);
         })
+        tg.ready();
+        tg.BackButton.hide();
     }, [tg])
 
     useEffect(() => {
@@ -39,18 +41,10 @@ function App({ isAdmin }) {
             })
     }, [dispatch, initData, tg]);
 
-    useEffect(() => {
-        tg.ready();
-    }, [tg]);
-
-    useEffect(() => {
-        tg.BackButton.hide();
-    }, [tg]);
-
     return (
         <ProductsContext.Provider value={products}>
             <IsAdminContext.Provider value={isAdmin}>
-                <div className={`App`}>
+                <div className={'App'}>
                     { products.length > 0 && <Outlet /> }
                 </div>
             </IsAdminContext.Provider>

@@ -12,7 +12,6 @@ import './productControl.css';
 export default function ProductControl(props) {
     const { tg } = useTelegram();
     const product = props.product;
-    console.log('product: ', product)
     const productId = product.id;
     const productCount = useSelector(state => state.cart.entities[productId]?.count) || 0;
 

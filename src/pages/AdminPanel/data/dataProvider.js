@@ -2,16 +2,15 @@ import { fetchUtils } from 'react-admin';
 import { SERVER_URL } from 'consts/consts';
 import { stringify } from 'query-string';
 
+
 const httpClient = (url, options = {}) => {
-    const initData = localStorage.getItem('username');
+    const initData = localStorage.getItem('initData');
     options.user = {
         authenticated: true,
         token: `tma ${initData}`
     };
     return fetchUtils.fetchJson(url, options);
 };
-
-
 
 const dataProvider = {
     getList: async (resource, params) => {
@@ -91,7 +90,6 @@ const dataProvider = {
         };
 
         const url = `${SERVER_URL}/${resource}?${stringify(query)}`;
-        console.log('query', url)
         const { json, headers } = await httpClient(url, { signal: params.signal });
 
         return {
@@ -138,14 +136,24 @@ const dataProvider = {
                 }
             });
 
+            const oldImages = [];
+
             // Фильтруем новые изображения и добавляем их в FormData
+            console.log('images: ', params.data.images)
             if (params.data.images && params.data.images.length > 0) {
                 params.data.images
-                    .filter((image) => image.rawFile) // Берём только новые изображения
                     .forEach((file) => {
-                        formData.append('images', file.rawFile);
-                    });
+                        if (file.rawFile) {
+                            formData.append('images', file.rawFile);
+                        } else {
+                            oldImages.push(file.src);
+                        }
+                    })
             }
+
+            console.log('oldImages: ', oldImages)
+
+            formData.append('oldImages', JSON.stringify(oldImages))
 
             const { json } = await httpClient(url, {
                 method: 'PUT',
@@ -159,7 +167,6 @@ const dataProvider = {
             method: 'PUT',
             body: JSON.stringify(params.data),
         })
-        console.log('json: ', json)
         return { data: json };
     },
 

@@ -26,7 +26,6 @@ export default function ProductPage() {
     useEffect(() => {
         getOneProduct(productId, initData)
             .then((data) => {
-                console.log('data', data)
                 if (data.error) {
                     handleApiResponse(data, tg);
                     return;
