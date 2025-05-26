@@ -21,12 +21,14 @@ export const cartSlice = createSlice({
     reducers: {
         add: (state, action) => {
             const productItem = action.payload;
+            const images = productItem?.images.map((image) => image.src);
+
             state.entities[productItem.id] = {
                 id: productItem.id,
                 name: productItem.name,
                 price: productItem.price,
                 count: 1,
-                img: productItem.img
+                img: images[0]
             }
         },
         remove: (state, action) => {
@@ -41,19 +43,6 @@ export const cartSlice = createSlice({
             const productItem = action.payload;
             state.entities[productItem.id].count += 1;
         },
-        // setCart: (state, action) => {
-        //     const items = action.payload;
-        //     state.entities = items.reduce((acc, item) => {
-        //         acc[item.id] = { 
-        //             id: item.id,
-        //             name: item.name,
-        //             price: item.price,
-        //             count: item.count,
-        //             img: item.img
-        //         };
-        //         return acc;
-        //     }, {});
-        // },
         clearCart: (state, action) => {
             state.entities = {};
         }

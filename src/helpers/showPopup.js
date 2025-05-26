@@ -15,12 +15,13 @@ function showAuthErrorPopup(tg, message) {
     })
 }
 
-function showWarningPopup(tg, message) {
+function showWarningPopup(tg, message, buttonText='Хорошо, спасибо', id='') {
     tg?.HapticFeedback.notificationOccurred('warning');
     tg.showPopup({
         message: message,
         buttons: [{
-            text: 'Хорошо, спасибо'
+            text: buttonText,
+            id: id
         }]
     });
 }

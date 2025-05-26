@@ -9,3 +9,8 @@
     gap: var(--big-gap) var(--small-gap);
     margin: 0 auto;
 }
+
+.admin-login {
+    max-width: var(--max-width-content);
+    margin: 0 auto;
+}

@@ -23,7 +23,6 @@ input[type='radio']:checked + .custom-radio::after {
     width: 0.625rem;
     height: 0.625rem;
     background-color: var(--primary-color);
-    /* background-color: #C1E363; */
     border-radius: 50%;
     position: absolute;
     top: 50%;
