@@ -8,7 +8,7 @@ import Button from 'UI/Button/Button';
 import './catalogPage.css';
 
 export default function CatalogPage() {
-    const { tg, initData } = useTelegram();
+    const { tg } = useTelegram();
     const isCartEmpty = useIsCartEmpty();
     const navigate = useNavigate();
     const products = useContext(ProductsContext);
