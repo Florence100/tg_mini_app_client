@@ -65,7 +65,7 @@ function Root() {
 
         authorization(initData)
             .then((data) => {
-                if (data.error) {
+                if (data?.error) {
                     handleApiResponse(data, tg);
                     return;
                 }

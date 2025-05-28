@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import updateInvoiceStatus from 'fetch/updateInvoiceStatus';
 import useTelegram from 'hooks/useTelegram';
+import { showWarningPopup } from 'helpers/showPopup';
 
 
 const useTelegramEvents = () => {
@@ -14,6 +15,7 @@ const useTelegramEvents = () => {
         if (status === 'failed') {
             tg?.HapticFeedback.notificationOccurred('error');
             updateInvoiceStatus(initData, slug, status);
+            showWarningPopup(tg, 'Платеж не был отправлен. Пожалуйста, попробуйте еще раз.');
         }
         if (status === 'cancelled') {
             updateInvoiceStatus(initData, slug, status);
