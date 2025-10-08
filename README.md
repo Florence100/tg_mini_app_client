@@ -65,3 +65,14 @@ npm install
 
 # Запустить проект
 npm run start
+
+## Скриншоты интерфейса
+
+Главная страница Mini App:
+![Home](https://github.com/Florence100/tg_mini_app_client/issues/15#issue-3494537986)
+
+Оформление заказа:
+![Order](https://github.com/Florence100/tg_mini_app_client/issues/16#issue-3494569027)
+
+Панель администратора:
+![Admin panel](https://github.com/Florence100/tg_mini_app_client/issues/17#issue-3494575649)
