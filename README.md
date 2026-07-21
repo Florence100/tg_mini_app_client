@@ -1,20 +1,20 @@
 # Telegram Mini App Client
 
-Frontend часть fullstack-приложения для Telegram Mini Apps.  
-Проект реализован на React с использованием Redux и Telegram Web Apps API.  
+The frontend component of a full-stack Telegram Mini App.  
+The project is built using React, Redux, and the Telegram Web Apps API.  
 
-Приложение предназначено для заказа десертов прямо в Telegram и взаимодействует с backend-сервером через REST API.
-
----
-
-## Описание проекта
-
-Мини-приложение позволяет пользователю просматривать каталог десертов, оформлять заказы и взаимодействовать с интерфейсом без выхода из Telegram.  
-Реализованы темы, адаптивность и корректная работа с Telegram Web Apps API.
+The application enables users to order desserts directly within Telegram and communicates with the backend server via a REST API.
 
 ---
 
-## Технологический стек
+## Project Description
+
+The mini-app allows the user to browse the dessert catalog, place orders, and interact with the interface without leaving Telegram.  
+It features theme support, responsiveness, and proper integration with the Telegram Web Apps API.
+
+---
+
+## Technology stack
 
 - React  
 - Redux Toolkit  
@@ -28,21 +28,21 @@ Frontend часть fullstack-приложения для Telegram Mini Apps.
 
 ---
 
-## Основной функционал
+## Core functionality
 
-- Отображение и фильтрация каталога товаров  
-- Оформление заказов и передача данных на сервер  
-- Интеграция с Telegram WebApps API (инициализация, user data, события)  
-- Авторизация и взаимодействие с backend REST API  
-- Поддержка адаптивности и цветовых тем Telegram  
-- Отображение уведомлений и состояний (загрузка, ошибки)
+- Product catalog display and filtering  
+- Order placement and data transmission to the server  
+- Integration with the Telegram WebApps API (initialization, user data, events)  
+- Authorization and interaction with the backend REST API  
+- Support for responsiveness and Telegram color themes  
+- Display of notifications and states (loading, errors)
 
 ---
 
-## Настройка окружения
+## Environment setup
 
-Для корректной работы Mini App требуется HTTPS.  
-Пример `.env` файла:
+HTTPS is required for the Mini App to function correctly.  
+Example of a `.env` file:
 
 ```bash
 REACT_APP_PUBLIC_URL=https://4mhfmdzg-3000.euw.devtunnels.ms
@@ -50,29 +50,29 @@ REACT_APP_SERVER_URL=https://4mhfmdzg-8001.euw.devtunnels.ms
 ```
 ---
 
-## Как запустить проект
+## How to run the project:
 
 ```bash
-# Клонировать репозиторий
+# Clone the repository
 git clone https://github.com/Florence100/tg_mini_app_client
 cd tg_mini_app_client
 ```
 
-# Установить зависимости
+# Install dependencies
 npm install
 
-# Создать .env и заполнить данные (см. выше)
+# Create a .env file and fill in the data (see above).
 
-# Запустить проект
+# Run the project
 npm run start
 
-## Скриншоты интерфейса
+## Interface screenshots
 
-Главная страница Mini App:
+Mini App Main Page:
 ![Home](https://github.com/Florence100/tg_mini_app_client/issues/15#issue-3494537986)
 
-Оформление заказа:
+Placing an order:
 ![Order](https://github.com/Florence100/tg_mini_app_client/issues/16#issue-3494569027)
 
-Панель администратора:
+Admin panel:
 ![Admin panel](https://github.com/Florence100/tg_mini_app_client/issues/17#issue-3494575649)
